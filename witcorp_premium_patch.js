@@ -386,15 +386,4 @@ const _statusObserver = new MutationObserver(muts => {
         }
     });
 });
-
-// ============================================================
-// INJECT CSS patch into page
-// ============================================================
-(function injectCSS() {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'witcorp_premium_patch.css';
-    document.head.appendChild(link);
-})();
-
 console.log('✅ Witcorp Premium Patch loaded — Speed-dial Actions + 3D Boot Animation active');
