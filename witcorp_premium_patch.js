@@ -7,7 +7,10 @@
 // BOOT CINEMATIC ANIMATION
 // ============================================================
 (function initBootAnimation() {
-    // Create boot overlay
+     if (sessionStorage.getItem('booted')) {
+        return;
+    }
+    sessionStorage.setItem('booted', '1');
     const overlay = document.createElement('div');
     overlay.id = 'bootOverlay';
     overlay.innerHTML = `
