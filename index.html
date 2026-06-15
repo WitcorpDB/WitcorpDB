@@ -11,33 +11,33 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body id="appBody" class="min-h-screen overflow-x-hidden bg-slate-100">
+<body id="appBody" class="min-h-screen overflow-x-hidden">
 
   <!-- TOAST CONTAINER -->
   <div id="toastContainer" class="fixed bottom-6 right-6 z-[999999] flex flex-col gap-3 pointer-events-none"></div>
 
   <!-- LOGIN / REGISTER SCREEN -->
-  <div id="authScreen" class="fixed inset-0 flex items-center justify-center bg-[#1A2E5A] z-[9999]">
-    <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md text-center">
+  <div id="authScreen" class="fixed inset-0 flex items-center justify-center auth-bg z-[9999]">
+    <div class="auth-card p-10 rounded-3xl shadow-2xl w-full max-w-md text-center">
       <div class="logo-glow w-20 h-20 mx-auto mb-4">
-        <img src="logo.png" class="w-full h-full object-cover">
+        <img src="logo.png" class="w-full h-full object-cover rounded-2xl">
       </div>
-      <h1 class="text-lg font-black text-[#1e3a8a] uppercase">Witcorp India Advisors LLP</h1>
-      <p class="text-xs text-green-500 font-bold mt-1">Strategic Wisdom. Global Growth.</p>
-      <input id="email" type="email" placeholder="Enter Email" class="w-full mt-6 p-3 border rounded-xl">
-      <input id="password" type="password" placeholder="Enter Password" class="w-full mt-3 p-3 border rounded-xl">
-      <button onclick="registerUser()" class="w-full mt-4 bg-yellow-400 text-blue-900 py-3 rounded-xl font-bold">Register</button>
-      <button onclick="loginUser()" class="w-full mt-2 bg-[#1A2E5A] text-white py-3 rounded-xl font-bold">Login</button>
+      <h1 class="text-xl font-black text-white uppercase tracking-tight">Witcorp India Advisors LLP</h1>
+      <p class="text-xs text-emerald-400 font-bold mt-1">Strategic Wisdom. Global Growth.</p>
+      <input id="email" type="email" placeholder="Enter Email" class="auth-input w-full mt-6 p-3 rounded-xl">
+      <input id="password" type="password" placeholder="Enter Password" class="auth-input w-full mt-3 p-3 rounded-xl">
+      <button onclick="registerUser()" class="w-full mt-4 bg-yellow-400 text-blue-900 py-3 rounded-xl font-bold hover:bg-yellow-300 transition-all">Register</button>
+      <button onclick="loginUser()" class="w-full mt-2 btn-primary text-white py-3 rounded-xl font-bold">Login</button>
       <div class="mt-4 text-center">
-        <button onclick="forgotPassword()" class="text-sm font-bold text-blue-500 hover:text-blue-700 transition-all">Forgot Password?</button>
+        <button onclick="forgotPassword()" class="text-sm font-bold text-blue-300 hover:text-white transition-all">Forgot Password?</button>
       </div>
-      <p id="authMsg" class="text-sm mt-3 text-red-500"></p>
+      <p id="authMsg" class="text-sm mt-3 text-red-400"></p>
     </div>
   </div>
 
-  <!-- appScreen -->
+  <!-- APP SCREEN -->
   <div id="appScreen" class="hidden flex-col w-full min-h-screen">
 
     <!-- ANNOUNCEMENT BANNER -->
@@ -46,230 +46,278 @@
         <i class="fas fa-bullhorn text-yellow-300"></i>
         <span id="announcementText"></span>
       </div>
-      <button onclick="this.parentElement.classList.add('hidden')"
-        class="ml-4 opacity-70 hover:opacity-100 font-black text-lg leading-none">✕</button>
+      <button onclick="this.parentElement.classList.add('hidden')" class="ml-4 opacity-70 hover:opacity-100 font-black text-lg leading-none">✕</button>
     </div>
 
-    <!-- MAIN LAYOUT ROW -->
-    <div class="flex flex-col lg:flex-row flex-1 w-full min-h-0">
+    <!-- MAIN LAYOUT -->
+    <div class="flex w-full min-h-screen">
 
       <!-- MOBILE TOPBAR -->
-      <div class="lg:hidden flex items-center justify-between p-3 bg-[#1A2E5A] text-white">
-        <button onclick="toggleMenu()">☰</button>
-        <span class="font-bold text-sm">Witcorp India Advisors LLP</span>
+      <div class="lg:hidden flex items-center justify-between p-3 topbar-mobile text-white fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center gap-2">
+          <button onclick="toggleMenu()" class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+            <i class="fas fa-bars"></i>
+          </button>
+          <img src="logo.png" class="w-8 h-8 rounded-lg object-cover">
+          <span class="font-bold text-sm">Witcorp Hub</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleNotificationPanel()" class="relative w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+            <i class="fas fa-bell text-sm"></i>
+            <span id="notificationCountMobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full items-center justify-center hidden">0</span>
+          </button>
+          <button onclick="toggleProfileMenu()" class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-black text-sm">
+            <span id="profileInitialMobile">W</span>
+          </button>
+        </div>
       </div>
 
       <!-- MOBILE MENU OVERLAY -->
-      <div id="mobileMenu" onclick="toggleMenu()" class="fixed inset-0 bg-black/40 hidden z-50">
-        <div id="mobileSidebar" class="sidebar-theme-chill w-[75%] max-w-[280px] h-full p-4 text-white overflow-y-auto" onclick="event.stopPropagation()">
-          <div class="text-center mb-4">
-            <div class="logo-glow w-16 h-16 mx-auto mb-2">
+      <div id="mobileMenu" onclick="toggleMenu()" class="fixed inset-0 bg-black/50 hidden z-50 lg:hidden">
+        <div id="mobileSidebar" class="new-sidebar w-[80%] max-w-[300px] h-full flex flex-col overflow-hidden" onclick="event.stopPropagation()">
+          <!-- Sidebar Header -->
+          <div class="sidebar-header p-5 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 logo-glow-sm">
               <img src="logo.png" class="w-full h-full object-cover">
             </div>
-            <h1 class="text-sm font-black text-yellow-400 uppercase leading-tight">Witcorp India Advisors LLP</h1>
-            <p class="text-[9px] text-green-400 font-bold mt-1">Strategic Wisdom. Global Growth.</p>
-          </div>
-          <div class="mt-4 space-y-2 text-sm">
-            <button onclick="showSection('dashboard');toggleMenu()" class="block w-full text-left p-3 rounded-lg hover:bg-white/10">Dashboard Home</button>
-            <button onclick="showSection('clientManagement');toggleMenu()" class="block w-full text-left p-3 rounded-lg hover:bg-white/10">Client Details</button>
-            <button onclick="showSection('vaultManagement');toggleMenu()" class="block w-full text-left p-3 rounded-lg hover:bg-white/10">Credentials Vault</button>
-            <button onclick="showSection('dscManagement');toggleMenu()" class="block w-full text-left p-3 rounded-lg hover:bg-white/10">DSC Status</button>
-            <div class="mt-4 text-[10px] text-blue-200 uppercase">Managements</div>
-            <div class="mt-2">
-              <button onclick="toggleAccountingHub()" class="w-full px-4 py-3 rounded-xl bg-emerald-600 text-white font-black text-sm">
-                <i class="fas fa-book mr-2"></i> Accounting Hub👇
-              </button>
-              <div id="accountinghubMenu" class="hidden mt-2 space-y-2">
-                <button onclick="filterByField('service_category', 'Sales');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">Sales</button>
-                <button onclick="filterByField('service_category', 'Purchases');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">Purchases</button>
-                <button onclick="filterByField('service_category', 'Sundry Debtors');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">Sundry Debtors</button>
-                <button onclick="filterByField('service_category', 'Sundry Creditors');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">Sundry Creditors</button>
-                <button onclick="filterByField('service_category', 'Payroll Entries');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">Payroll Entries</button>
-                <button onclick="filterByField('service_category', 'Bank Statement');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">Bank Statement</button>
-                <button onclick="filterByField('service_category', 'GST Transfer Entries');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">GST Transfer Entries</button>
-                <button onclick="filterByField('service_category', 'Depreciation Entries');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">Depreciation Entries</button>
-                <button onclick="filterByField('service_category', 'TDS Entries');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">TDS Entries</button>
-                <button onclick="filterByField('service_category', 'Miscellaneous Ledgers');toggleMenu()" class="w-full px-4 py-2 rounded-lg bg-white text-slate-800 text-left font-bold shadow-sm">Miscellaneous Ledgers</button>
-              </div>
+            <div>
+              <div class="text-white font-black text-sm leading-tight">WITCORP</div>
+              <div class="text-blue-300 text-[10px] font-semibold">India Advisors LLP</div>
             </div>
-            <button onclick="filterByField('service_category','GST');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">GST Compliance</button>
-            <button onclick="filterByField('service_category','ROC');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">Corporate Compliance (ROC)</button>
-            <button onclick="filterByField('service_category','IT');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">Income Tax</button>
-            <button onclick="filterByField('service_category','PT');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">Professional Tax</button>
-            <button onclick="filterByField('service_category','TDS');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">TDS Compliance</button>
-            <button onclick="filterByField('service_category','DIRECTOR KYC');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">Director KYC</button>
-            <button onclick="filterByField('service_category','UDIN');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">UDIN/Certification</button>
-            <button onclick="filterByField('service_category','FOOD');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">Food License</button>
-            <button onclick="filterByField('service_category','MSME');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">MSME Certification</button>
-            <button onclick="filterByField('service_category','PAYROLL');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">Payroll</button>
-            <button onclick="filterByField('service_category','REPORTS');toggleMenu()" class="block w-full text-left p-2 hover:bg-white/10">Reports</button>
+            <button onclick="toggleMenu()" class="ml-auto w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white/70 hover:text-white">
+              <i class="fas fa-times text-sm"></i>
+            </button>
           </div>
-          <div class="dev-signature-wrap mt-6">
-            <span class="dev-label">Developed By</span>
-            <span class="dev-name">Kamlesh Yadav</span>
-            <div class="dev-divider">
-              <div class="dev-divider-line"></div>
-              <div class="dev-divider-dot"></div>
-              <div class="dev-divider-line"></div>
-            </div>
+          <div class="flex-1 overflow-y-auto p-3">
+            <div id="mobileSidebarContent"></div>
           </div>
         </div>
       </div>
 
       <!-- DESKTOP SIDEBAR -->
-      <aside id="sidebar" class="sidebar-theme-chill w-72 text-white flex-col shadow-2xl z-50 hidden lg:flex">
-        <div class="p-4 border-b border-white/10 text-center">
-          <div class="logo-glow w-20 h-20 mx-auto mb-4">
-            <img src="logo.png" class="w-full h-full object-cover">
-          </div>
-          <h1 class="text-lg font-black text-yellow-400 tracking-tighter uppercase leading-tight">Witcorp India Advisors LLP</h1>
-          <div class="motto-text animate-pulse text-green-400">Strategic Wisdom. Global Growth.</div>
-        </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-          <button onclick="showSection('dashboard')" id="nav-dashboard" class="nav-btn active w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-house-chimney-window w-5 text-yellow-400"></i> Dashboard Home
-          </button>
-          <div class="pt-6 pb-2 px-4 text-[10px] font-black text-blue-300 uppercase tracking-widest opacity-70">Client & Security</div>
-          <button onclick="showSection('clientManagement')" id="nav-client" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-address-card w-5 text-blue-300"></i> Client Details
-          </button>
-          <button onclick="showSection('vaultManagement')" id="nav-vault" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-shield-halved w-5 text-blue-300"></i> Credentials Vault
-          </button>
-          <button onclick="showSection('dscManagement')" id="nav-dsc" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-key w-5 text-cyan-300"></i> DSC Status
-          </button>
-          <div class="pt-6 pb-2 px-4 text-[10px] font-black text-blue-300 uppercase tracking-widest opacity-70">Managements</div>
-          <div class="mt-2">
-            <button onclick="toggleAccountingHubDesktop()" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-              <i class="fas fa-book w-5 text-white"></i> Accounting Hub👇
-            </button>
-            <div id="accountinghubDesktopMenu" class="hidden mt-2 space-y-2 px-2">
-              <button onclick="filterByField('service_category', 'Sales')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">Sales</button>
-              <button onclick="filterByField('service_category', 'Purchases')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">Purchases</button>
-              <button onclick="filterByField('service_category', 'Sundry Debtors')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">Sundry Debtors</button>
-              <button onclick="filterByField('service_category', 'Sundry Creditors')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">Sundry Creditors</button>
-              <button onclick="filterByField('service_category', 'Payroll Entries')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">Payroll Entries</button>
-              <button onclick="filterByField('service_category', 'Bank Statement')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">Bank Statement</button>
-              <button onclick="filterByField('service_category', 'GST Transfer Entries')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">GST Transfer Entries</button>
-              <button onclick="filterByField('service_category', 'Depreciation Entries')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">Depreciation Entries</button>
-              <button onclick="filterByField('service_category', 'TDS Entries')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">TDS Entries</button>
-              <button onclick="filterByField('service_category', 'Miscellaneous Ledgers')" class="w-full px-4 py-2 rounded-lg bg-slate-100 text-left font-bold text-black">Miscellaneous Ledgers</button>
+      <aside id="sidebar" class="new-sidebar w-64 flex-col hidden lg:flex fixed top-0 left-0 h-full z-40 overflow-hidden">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header p-5">
+          <div class="flex items-center gap-3 mb-1">
+            <div class="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 logo-glow-sm">
+              <img src="logo.png" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <div class="text-white font-black text-sm leading-tight">WITCORP</div>
+              <div class="text-blue-300 text-[10px] font-semibold">India Advisors LLP</div>
             </div>
           </div>
-          <button id="nav-gst" onclick="filterByField('service_category', 'GST')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-file-invoice-dollar w-5 text-emerald-400"></i> GST Compliance
+          <div class="text-[9px] text-emerald-400 font-bold tracking-widest uppercase mt-2">Strategic Wisdom · Global Growth</div>
+        </div>
+
+        <!-- Nav Items -->
+        <nav class="flex-1 overflow-y-auto p-3 space-y-1 sidebar-nav">
+          <button onclick="showSection('dashboard')" id="nav-dashboard" class="nav-btn active w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon"><i class="fas fa-house-chimney-window"></i></div>
+            <span>Dashboard</span>
           </button>
-          <button id="nav-roc" onclick="filterByField('service_category', 'ROC')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-landmark-dome w-5 text-amber-500"></i> Corporate Compliance (ROC)
+
+          <div class="nav-section-label">Client & Security</div>
+          <button onclick="showSection('clientManagement')" id="nav-client" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-blue"><i class="fas fa-address-card"></i></div>
+            <span>Client Management</span>
           </button>
-          <button id="nav-it" onclick="filterByField('service_category', 'IT')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-piggy-bank w-5 text-rose-400"></i> Income Tax
+          <button onclick="showSection('vaultManagement')" id="nav-vault" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-purple"><i class="fas fa-shield-halved"></i></div>
+            <span>Credentials Vault</span>
           </button>
-          <button id="nav-pt" onclick="filterByField('service_category', 'PT')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-briefcase w-5 text-sky-400"></i> Professional Tax
+          <button onclick="showSection('dscManagement')" id="nav-dsc" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-cyan"><i class="fas fa-key"></i></div>
+            <span>DSC Status</span>
           </button>
-          <button id="nav-tds" onclick="filterByField('service_category', 'TDS')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-file-invoice w-5 text-orange-400"></i> TDS Compliance
+
+          <div class="nav-section-label">Modules</div>
+          <!-- Accounting Hub Dropdown -->
+          <div>
+            <button onclick="toggleAccountingHubDesktop()" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+              <div class="nav-icon nav-icon-green"><i class="fas fa-book"></i></div>
+              <span class="flex-1">Accounting Hub</span>
+              <i class="fas fa-chevron-down text-xs opacity-50 transition-transform" id="acctHubChevron"></i>
+            </button>
+            <div id="accountinghubDesktopMenu" class="hidden mt-1 ml-3 space-y-1 border-l-2 border-white/10 pl-3">
+              <button onclick="filterByField('service_category','Sales')" class="acc-sub-btn">Sales</button>
+              <button onclick="filterByField('service_category','Purchases')" class="acc-sub-btn">Purchases</button>
+              <button onclick="filterByField('service_category','Sundry Debtors')" class="acc-sub-btn">Sundry Debtors</button>
+              <button onclick="filterByField('service_category','Sundry Creditors')" class="acc-sub-btn">Sundry Creditors</button>
+              <button onclick="filterByField('service_category','Payroll Entries')" class="acc-sub-btn">Payroll Entries</button>
+              <button onclick="filterByField('service_category','Bank Statement')" class="acc-sub-btn">Bank Statement</button>
+              <button onclick="filterByField('service_category','GST Transfer Entries')" class="acc-sub-btn">GST Transfer Entries</button>
+              <button onclick="filterByField('service_category','Depreciation Entries')" class="acc-sub-btn">Depreciation Entries</button>
+              <button onclick="filterByField('service_category','TDS Entries')" class="acc-sub-btn">TDS Entries</button>
+              <button onclick="filterByField('service_category','Miscellaneous Ledgers')" class="acc-sub-btn">Misc. Ledgers</button>
+            </div>
+          </div>
+
+          <button id="nav-gst" onclick="filterByField('service_category','GST')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-emerald"><i class="fas fa-file-invoice-dollar"></i></div>
+            <span>GST Compliance</span>
           </button>
-          <button id="nav-dkyc" onclick="filterByField('service_category', 'DIRECTOR KYC')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-id-card w-5 text-pink-400"></i> Director KYC
+          <button id="nav-roc" onclick="filterByField('service_category','ROC')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-amber"><i class="fas fa-landmark-dome"></i></div>
+            <span>ROC Filings</span>
           </button>
-          <button id="nav-udin" onclick="filterByField('service_category', 'UDIN')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-certificate w-5 text-yellow-300"></i> UDIN/Certification
+          <button id="nav-it" onclick="filterByField('service_category','IT')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-rose"><i class="fas fa-piggy-bank"></i></div>
+            <span>Income Tax</span>
           </button>
-          <button id="nav-food" onclick="filterByField('service_category', 'FOOD')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-shield-alt w-5 text-red-400"></i> Food License
+          <button id="nav-pt" onclick="filterByField('service_category','PT')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-sky"><i class="fas fa-briefcase"></i></div>
+            <span>Professional Tax</span>
           </button>
-          <button id="nav-msme" onclick="filterByField('service_category', 'MSME')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-industry w-5 text-cyan-300"></i> MSME Certification
+          <button id="nav-tds" onclick="filterByField('service_category','TDS')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-orange"><i class="fas fa-file-invoice"></i></div>
+            <span>TDS Compliance</span>
           </button>
-          <button id="nav-payroll" onclick="filterByField('service_category', 'PAYROLL')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-money-check-dollar w-5 text-green-400"></i> Payroll
+          <button id="nav-dkyc" onclick="filterByField('service_category','DIRECTOR KYC')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-pink"><i class="fas fa-id-card"></i></div>
+            <span>Director KYC</span>
           </button>
-          <button id="nav-reports" onclick="filterByField('service_category', 'REPORTS')" class="nav-btn w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all">
-            <i class="fas fa-chart-line w-5 text-red-400"></i> Reports
+          <button id="nav-udin" onclick="filterByField('service_category','UDIN')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-yellow"><i class="fas fa-certificate"></i></div>
+            <span>UDIN/Certification</span>
+          </button>
+          <button id="nav-food" onclick="filterByField('service_category','FOOD')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-red"><i class="fas fa-shield-alt"></i></div>
+            <span>Food License</span>
+          </button>
+          <button id="nav-msme" onclick="filterByField('service_category','MSME')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-teal"><i class="fas fa-industry"></i></div>
+            <span>MSME Certification</span>
+          </button>
+          <button id="nav-payroll" onclick="filterByField('service_category','PAYROLL')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-green"><i class="fas fa-money-check-dollar"></i></div>
+            <span>Payroll</span>
+          </button>
+          <button id="nav-reports" onclick="filterByField('service_category','REPORTS')" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-violet"><i class="fas fa-chart-line"></i></div>
+            <span>Reports & Insights</span>
+          </button>
+
+          <div class="nav-section-label">Tools</div>
+          <button onclick="showSection('taskManager')" id="nav-tasks" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-indigo"><i class="fas fa-tasks"></i></div>
+            <span>Task Manager</span>
+          </button>
+          <button onclick="toggleChat()" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-purple"><i class="fas fa-comments"></i></div>
+            <span>Team Chat</span>
+            <span id="chatNavBadge" class="hidden ml-auto bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-black">0</span>
+          </button>
+          <button onclick="openThemeSettings()" class="nav-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl">
+            <div class="nav-icon nav-icon-pink"><i class="fas fa-palette"></i></div>
+            <span>Theme Settings</span>
           </button>
         </nav>
+
+        <!-- Dev Signature -->
         <div class="dev-signature-wrap">
           <span class="dev-label">Developed By</span>
           <span class="dev-name">Kamlesh Yadav</span>
-          <div class="dev-divider">
-            <div class="dev-divider-line"></div>
-            <div class="dev-divider-dot"></div>
-            <div class="dev-divider-line"></div>
-          </div>
+          <div class="dev-divider"><div class="dev-divider-line"></div><div class="dev-divider-dot"></div><div class="dev-divider-line"></div></div>
         </div>
       </aside>
 
       <!-- MAIN CONTENT -->
-      <main class="flex-1 w-full overflow-y-auto p-3 sm:p-4 lg:p-12" id="mainContent">
+      <main class="flex-1 lg:ml-64 min-h-screen main-content" id="mainContent">
 
-        <!-- TOP PROFILE BAR -->
-        <div class="flex justify-between items-center mb-6 relative">
-          <div id="breadcrumb" class="hidden lg:flex items-center gap-2 text-xs font-semibold text-slate-400">
-            <i class="fas fa-home text-blue-400"></i>
-            <span id="breadcrumbText">Dashboard</span>
+        <!-- TOP HEADER BAR -->
+        <div class="topbar hidden lg:flex items-center gap-4 px-6 py-4 sticky top-0 z-30">
+          <!-- Search -->
+          <div class="flex-1 relative max-w-xl" id="globalSearchBox">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input type="text" id="globalSearch" oninput="handleSearch(this.value)"
+              placeholder="Search anything... (Clients, Tasks, Compliances, Documents)"
+              class="topbar-search w-full pl-11 pr-4 py-2.5 rounded-xl text-sm font-medium">
+            <kbd class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">⌘ K</kbd>
           </div>
-          <div class="flex items-center gap-3 ml-auto">
-            <div id="onlineUsersBar" class="hidden lg:flex items-center gap-1.5 mr-2"></div>
-            <div id="lastSyncBadge" class="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-slate-100 text-slate-500 rounded-full text-[10px] font-bold border">
-              <i class="fas fa-clock text-blue-400"></i>
-              <span id="lastSyncText">Syncing...</span>
-            </div>
-            <button onclick="toggleChat()" id="chatToggleBtn"
-              class="flex items-center gap-2 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-[11px] font-black hover:bg-purple-200 transition-all border border-purple-200 relative" title="Team Chat">
-              <i class="fas fa-comments text-sm"></i>
-              <span>Team Chat</span>
-              <span id="chatUnreadBadge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-black">0</span>
+
+          <!-- Right Controls -->
+          <div class="flex items-center gap-2">
+            <!-- AI Button -->
+            <button onclick="toggleAIAssistant()" class="ai-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold">
+              <i class="fas fa-sparkles text-sm"></i> Ask AI
             </button>
+
+            <!-- Notification -->
             <div class="relative">
-              <button onclick="toggleNotificationPanel()" class="w-12 h-12 rounded-full bg-white shadow-lg border flex items-center justify-center text-slate-700 relative hover:bg-blue-50 transition-all">
+              <button onclick="toggleNotificationPanel()" class="topbar-icon-btn relative">
                 <i class="fas fa-bell text-lg"></i>
-                <span id="notificationCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                <span id="notificationCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center hidden font-black">0</span>
               </button>
             </div>
+
+            <!-- Dark Mode -->
+            <button onclick="toggleDarkMode()" class="topbar-icon-btn" id="darkModeBtn" title="Toggle Dark Mode">
+              <i class="fas fa-moon text-base"></i>
+            </button>
+
+            <!-- Last Sync -->
+            <div id="lastSyncBadge" class="hidden items-center gap-1.5 px-3 py-1.5 sync-badge rounded-full text-[10px] font-bold">
+              <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+              <span id="lastSyncText">Synced</span>
+            </div>
+
+            <!-- Online Users -->
+            <div id="onlineUsersBar" class="flex items-center gap-1"></div>
+
+            <!-- Profile -->
             <div class="relative">
-              <button onclick="toggleProfileMenu()" class="w-12 h-12 rounded-full bg-[#1A2E5A] text-white flex items-center justify-center font-black text-lg shadow-lg border-2 border-white hover:bg-blue-800 transition-all">
-                <span id="profileInitial">K</span>
-                <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-slate-600 whitespace-nowrap">Profile</div>
+              <button onclick="toggleProfileMenu()" class="profile-btn flex items-center gap-2 px-3 py-2 rounded-xl">
+                <div class="w-8 h-8 rounded-lg avatar-circle flex items-center justify-center font-black text-sm text-white">
+                  <span id="profileInitial">K</span>
+                </div>
+                <div class="text-left hidden xl:block">
+                  <div id="profileDisplayNameTop" class="text-sm font-bold text-slate-800 leading-tight">User</div>
+                  <div id="profileRoleTop" class="text-[10px] text-slate-500 font-semibold">Staff</div>
+                </div>
+                <i class="fas fa-chevron-down text-xs text-slate-400"></i>
               </button>
-              <div id="profileMenu" class="hidden absolute right-0 mt-3 w-[340px] max-w-[95vw] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
-                <div class="bg-[#1A2E5A] p-5 text-white">
-                  <div class="flex items-start gap-4">
-                    <div class="w-14 h-14 rounded-full bg-white text-[#1e3a8a] flex items-center justify-center font-black text-2xl">
+
+              <!-- Profile Dropdown -->
+              <div id="profileMenu" class="hidden absolute right-0 mt-2 w-72 profile-dropdown rounded-2xl shadow-2xl overflow-hidden z-50">
+                <div class="profile-dropdown-header p-5">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl avatar-circle flex items-center justify-center font-black text-xl text-white">
                       <span id="profileInitial2">K</span>
                     </div>
-                    <div class="flex-1 min-w-0">
-                      <div id="userGmail" class="text-xs text-blue-100 break-words leading-5 mt-1 overflow-hidden"></div>
+                    <div>
+                      <div id="profileNameDropdown" class="font-black text-white text-sm">User</div>
+                      <div id="userGmail" class="text-blue-200 text-xs mt-0.5 break-all"></div>
+                      <span id="profileRoleBadge" class="mt-1 inline-block px-2 py-0.5 bg-white/20 text-white text-[9px] font-black rounded-full">STAFF</span>
                     </div>
                   </div>
                 </div>
-                <div class="p-3">
-                  <button onclick="openProfileModal(); toggleProfileMenu();" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-all mb-2">
-                    <i class="fas fa-user-circle text-blue-500"></i> My Profile
+                <div class="p-2">
+                  <button onclick="openProfileModal(); toggleProfileMenu();" class="dropdown-item">
+                    <i class="fas fa-user-circle text-blue-500 w-5"></i> My Profile
                   </button>
-                  <button onclick="showPinnedRecords(); toggleProfileMenu();" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold transition-all mb-2">
-                    <i class="fas fa-thumbtack text-amber-500"></i> Pinned Records
+                  <button onclick="showPinnedRecords(); toggleProfileMenu();" class="dropdown-item">
+                    <i class="fas fa-thumbtack text-amber-500 w-5"></i> Pinned Records
                   </button>
-                  <button onclick="openThemeSettings()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold transition-all mb-2">
-                    <i class="fas fa-palette"></i> Theme Settings
+                  <button onclick="openThemeSettings()" class="dropdown-item">
+                    <i class="fas fa-palette text-purple-500 w-5"></i> Theme Settings
                   </button>
-                  <button onclick="openFontSizeModal()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold transition-all mb-2">
-                    <i class="fas fa-text-height"></i> Font Size
+                  <button onclick="openFontSizeModal()" class="dropdown-item">
+                    <i class="fas fa-text-height text-slate-500 w-5"></i> Font Size
                   </button>
-                  <button onclick="toggleNotificationSetting()" class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold transition-all mb-2">
-                    <div class="flex items-center gap-3"><i class="fas fa-bell"></i> Notification</div>
-                    <span id="notificationStatus" class="text-green-600 font-black">ON</span>
+                  <button onclick="toggleNotificationSetting()" class="dropdown-item justify-between">
+                    <div class="flex items-center gap-2"><i class="fas fa-bell text-blue-500 w-5"></i> Notifications</div>
+                    <span id="notificationStatus" class="text-emerald-500 text-xs font-black">ON</span>
                   </button>
-                  <button onclick="openMyActivity()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold transition-all mb-2">
-                    <i class="fas fa-clock-rotate-left"></i> My Activity
+                  <button onclick="openMyActivity()" class="dropdown-item">
+                    <i class="fas fa-clock-rotate-left text-indigo-500 w-5"></i> My Activity
                   </button>
-                  <button onclick="openExportModal()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold transition-all mb-2">
-                    <i class="fas fa-file-export"></i> Export Data
+                  <button onclick="openExportModal()" class="dropdown-item">
+                    <i class="fas fa-file-export text-teal-500 w-5"></i> Export Data
                   </button>
-                  <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-bold transition-all">
-                    <i class="fas fa-right-from-bracket"></i> Logout
+                  <div class="border-t border-slate-100 my-1"></div>
+                  <button onclick="logout()" class="dropdown-item text-red-600 hover:bg-red-50">
+                    <i class="fas fa-right-from-bracket text-red-500 w-5"></i> Logout
                   </button>
                 </div>
               </div>
@@ -278,7 +326,7 @@
         </div>
 
         <!-- NOTIFICATION PANEL -->
-        <div id="notificationPanel" class="hidden fixed top-20 right-6 w-[95vw] sm:w-[400px] bg-white rounded-2xl shadow-2xl border overflow-hidden z-[99999]">
+        <div id="notificationPanel" class="hidden fixed top-20 right-6 w-[95vw] sm:w-[400px] notification-panel rounded-2xl shadow-2xl overflow-hidden z-[99999]">
           <div class="p-4 border-b flex items-center justify-between">
             <span class="font-black text-slate-700">Notifications</span>
             <button onclick="markAllRead()" class="text-xs text-blue-600 font-bold hover:underline">Mark All Read</button>
@@ -286,37 +334,34 @@
           <div id="notificationList" class="max-h-[500px] overflow-y-auto divide-y"></div>
         </div>
 
-        <!-- TEAM CHAT PANEL — FIX: typingIndicator chatList ke BAHAR, aur chatList mein koi hardcoded content nahi -->
-        <div id="chatPanel" class="hidden bg-white rounded-3xl shadow-2xl border border-slate-200 flex-col overflow-hidden"
-           style="height: 85vh; min-height: 500px; max-height: 850px;">
-          <div class="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white flex-shrink-0">
+        <!-- TEAM CHAT PANEL -->
+        <div id="chatPanel" class="hidden chat-panel flex-col overflow-hidden">
+          <div class="chat-header flex items-center justify-between px-5 py-4 flex-shrink-0">
             <div class="flex items-center gap-3">
               <div class="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
-                <i class="fas fa-comments"></i>
+                <i class="fas fa-comments text-white"></i>
               </div>
               <div>
-                <div class="font-black text-sm">Team Chat</div>
-                <div class="text-[10px] opacity-70 flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 bg-green-400 rounded-full inline-block"></span> Live Sync On
+                <div class="font-black text-sm text-white">Team Chat</div>
+                <div class="text-[10px] text-white/70 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full inline-block"></span> Live Sync
                 </div>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="toggleChatSearch()" id="chatSearchBtn"
-                class="w-8 h-8 rounded-xl bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all text-sm" title="Search Messages">
+              <button onclick="toggleChatSearch()" class="w-8 h-8 rounded-xl bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-sm">
                 <i class="fas fa-search"></i>
               </button>
-              <button onclick="toggleChat()" class="w-8 h-8 rounded-xl bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all text-lg font-black">✕</button>
+              <button onclick="toggleChat()" class="w-8 h-8 rounded-xl bg-white/20 hover:bg-white/30 flex items-center justify-center text-white font-black">✕</button>
             </div>
           </div>
 
-          <div id="chatSearchBar" class="hidden px-4 pt-3 pb-2 flex-shrink-0" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">
+          <div id="chatSearchBar" class="hidden px-4 pt-3 pb-2 flex-shrink-0 chat-search-bar">
             <div class="relative">
               <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white/60 text-xs"></i>
               <input type="text" id="chatSearchInput" placeholder="Search messages..."
                 oninput="searchChatMessages(this.value)"
-                class="w-full pl-8 pr-8 py-2.5 rounded-xl text-sm font-semibold focus:outline-none transition-all"
-                style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;">
+                class="w-full pl-8 pr-8 py-2.5 rounded-xl text-sm font-semibold focus:outline-none chat-search-input">
               <button onclick="clearChatSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-xs">
                 <i class="fas fa-times"></i>
               </button>
@@ -324,47 +369,35 @@
             <div id="chatSearchCount" class="text-[10px] font-bold text-white/60 mt-1.5 ml-1"></div>
           </div>
 
-          <!-- FIX: chatList mein SIRF messages aayenge — koi hardcoded div nahi -->
-          <div id="chatList" class="flex-1 overflow-y-auto p-4 space-y-1 bg-slate-50/50 min-h-0" style="min-height: 350px;"></div>
+          <div id="chatList" class="flex-1 overflow-y-auto p-4 space-y-1 chat-messages min-h-0"></div>
 
-          <!-- FIX: typingIndicator chatList ke bahar, input ke upar -->
-          <div id="typingIndicator" class="hidden items-center gap-2 px-4 py-2 flex-shrink-0" style="background:#f8fafc;">
+          <div id="typingIndicator" class="hidden items-center gap-2 px-4 py-2 flex-shrink-0 chat-typing">
             <div class="flex items-center gap-1.5 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl rounded-tl-sm shadow-sm">
               <span id="typingText" class="text-xs font-semibold text-slate-500"></span>
               <div class="flex gap-1 ml-1">
-                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
-                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
-                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay:0ms"></span>
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay:150ms"></span>
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay:300ms"></span>
               </div>
             </div>
           </div>
 
-          <div class="flex-shrink-0 bg-white border-t border-slate-200">
+          <div class="flex-shrink-0 chat-input-area border-t">
             <div class="flex items-center gap-2 p-3">
-              <button id="emojiBtn" onclick="toggleEmojiPicker()"
-                class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-yellow-100 hover:text-yellow-500 transition-all flex-shrink-0 text-base">
-                😊
-              </button>
-              <input id="chatInput" type="text" placeholder="Write Message... (@ to mention, Enter to send)"
+              <button id="emojiBtn" onclick="toggleEmojiPicker()" class="w-9 h-9 rounded-xl chat-emoji-btn flex items-center justify-center text-base flex-shrink-0">😊</button>
+              <input id="chatInput" type="text" placeholder="Write message... (@ mention, Enter to send)"
                 oninput="handleChatInput(event)"
-                onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendChat(); }"
-                class="flex-1 px-4 py-3 rounded-2xl bg-slate-100 border border-slate-200 text-sm font-semibold focus:outline-none focus:border-purple-400 focus:bg-white transition-all">
-              <button id="sendChatBtn" onclick="sendChat()"
-                class="w-11 h-11 rounded-2xl bg-purple-600 text-white flex items-center justify-center hover:bg-purple-700 transition-all flex-shrink-0 shadow-md">
-                <i class="fas fa-paper-plane text-sm"></i>
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"
+                class="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium focus:outline-none chat-msg-input">
+              <button onclick="sendChat()" class="w-10 h-10 rounded-xl chat-send-btn flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-paper-plane text-sm text-white"></i>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- GLOBAL SEARCH -->
-        <div id="globalSearchBox" class="mb-10 relative max-w-2xl transform transition-all focus-within:scale-[1.02]">
-          <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-          <input type="text" id="globalSearch" oninput="handleSearch(this.value)" placeholder="Search Client, Service or Staff...  (Ctrl+K)" class="w-full pl-14 pr-6 py-5 bg-white rounded-2xl shadow-sm border border-slate-200 outline-none focus:border-blue-500 font-bold text-slate-700 transition-all">
-        </div>
-
-        <!-- DEADLINE ALERT BANNER -->
-        <div id="deadlineAlertBanner" class="hidden mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-3">
+        <!-- DEADLINE ALERT -->
+        <div id="deadlineAlertBanner" class="hidden mx-6 mt-4 p-4 deadline-alert rounded-2xl flex items-center gap-3">
           <i class="fas fa-triangle-exclamation text-red-500 text-lg"></i>
           <div>
             <p class="font-black text-red-700 text-sm">Deadline Alert</p>
@@ -373,459 +406,653 @@
           <button onclick="document.getElementById('deadlineAlertBanner').classList.add('hidden')" class="ml-auto text-red-400 hover:text-red-600 text-lg">&times;</button>
         </div>
 
-        <!-- DASHBOARD SECTION -->
-        <div id="dashboard" class="section active">
-          <div id="topAnchor"></div>
-          <div class="workspace-header-row">
-            <h2>Workspace Overview</h2>
-            <div class="workspace-controls">
-              <select id="filterStatus" onchange="applyMultiFilter()" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600 outline-none">
-                <option value="">All Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Processing">Processing</option>
-                <option value="Completed">Completed</option>
-              </select>
-              <select id="filterCategory" onchange="applyMultiFilter()" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600 outline-none">
-                <option value="">All Categories</option>
-                <option value="Sales">Sales</option>
-                <option value="Purchases">Purchases</option>
-                <option value="GST">GST</option>
-                <option value="ROC">ROC</option>
-                <option value="IT">Income Tax</option>
-                <option value="PT">Professional Tax</option>
-                <option value="TDS">TDS</option>
-                <option value="DIRECTOR KYC">Director KYC</option>
-                <option value="UDIN">UDIN</option>
-                <option value="FOOD">Food License</option>
-                <option value="MSME">MSME</option>
-                <option value="PAYROLL">Payroll</option>
-                <option value="REPORTS">Reports</option>
-                <option value="Sundry Debtors">Sundry Debtors</option>
-                <option value="Sundry Creditors">Sundry Creditors</option>
-                <option value="Payroll Entries">Payroll Entries</option>
-                <option value="Bank Statement">Bank Statement</option>
-                <option value="GST Transfer Entries">GST Transfer Entries</option>
-                <option value="Depreciation Entries">Depreciation Entries</option>
-                <option value="TDS Entries">TDS Entries</option>
-                <option value="Miscellaneous Ledgers">Miscellaneous Ledgers</option>
-              </select>
-              <button onclick="resetFilters()" class="px-3 py-2 bg-slate-100 text-slate-500 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all">
-                <i class="fas fa-filter-circle-xmark mr-1"></i> Reset
-              </button>
-              <button onclick="refreshData()" id="refreshBtn" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition-all shadow">
-                <i class="fas fa-rotate-right mr-1"></i> Refresh
-              </button>
-              <div class="flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black border border-emerald-200 shadow-sm">
-                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span> SYSTEM LIVE SYNC
+        <!-- PAGE CONTENT WRAPPER -->
+        <div class="p-4 lg:p-6">
+
+          <!-- ==================== DASHBOARD ==================== -->
+          <div id="dashboard" class="section active">
+
+            <!-- Welcome Header -->
+            <div class="dashboard-welcome-row flex items-center justify-between mb-6 flex-wrap gap-4">
+              <div>
+                <h1 class="text-2xl font-black text-slate-800" id="welcomeTitle">Welcome back 👋</h1>
+                <p class="text-slate-500 text-sm mt-1">Here's what's happening with your workspace today.</p>
               </div>
-            </div>
-          </div>
-
-          <!-- STAT CARDS -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-            <div onclick="filterByField('status', '')" class="stat-card bg-white p-4 rounded-[2.5rem] shadow-sm border-l-[12px] border-blue-600 relative overflow-hidden group cursor-pointer hover:shadow-md transition-all">
-              <i class="fas fa-folder-tree absolute -right-4 -bottom-4 text-8xl text-slate-50 opacity-10 group-hover:rotate-12 transition-transform"></i>
-              <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Total Portfolios</p>
-              <h3 id="statTotal" class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-800 mt-2">0</h3>
-              <p id="statTotalSub" class="text-[10px] text-slate-400 font-semibold mt-1"></p>
-            </div>
-            <div onclick="filterByField('status', 'Completed')" class="stat-card bg-white p-4 rounded-[2.5rem] shadow-sm border-l-[12px] border-emerald-500 group relative overflow-hidden cursor-pointer hover:shadow-md transition-all">
-              <i class="fas fa-circle-check absolute -right-4 -bottom-4 text-8xl text-slate-50 opacity-10 group-hover:rotate-12 transition-transform"></i>
-              <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Completed</p>
-              <h3 id="statDone" class="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 mt-2">0</h3>
-              <p id="statDoneSub" class="text-[10px] text-emerald-400 font-semibold mt-1"></p>
-            </div>
-            <div onclick="filterByField('status', 'Pending')" class="stat-card bg-white p-4 rounded-[2.5rem] shadow-sm border-l-[12px] border-rose-500 group relative overflow-hidden cursor-pointer hover:shadow-md transition-all">
-              <i class="fas fa-clock absolute -right-4 -bottom-4 text-8xl text-slate-50 opacity-10 group-hover:rotate-12 transition-transform"></i>
-              <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Pending Action</p>
-              <h3 id="statPending" class="text-3xl sm:text-4xl lg:text-5xl font-black text-rose-600 mt-2">0</h3>
-              <p id="statPendingSub" class="text-[10px] text-rose-400 font-semibold mt-1"></p>
-            </div>
-          </div>
-
-          <!-- ENTRY FORM -->
-          <div id="entryFormAnchor" class="lighting-border p-10 shadow-2xl mb-14 relative">
-            <div class="flex items-center justify-between mb-10">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
-                  <i class="fas fa-pen-to-square text-xl"></i>
+              <div class="flex items-center gap-3">
+                <div class="date-badge flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold">
+                  <i class="fas fa-calendar-alt text-blue-500"></i>
+                  <span id="currentDateBadge"></span>
+                  <i class="fas fa-chevron-down text-xs text-slate-400"></i>
                 </div>
-                <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tight" id="formTitle">Management Portal</h3>
-              </div>
-              <div id="editBadge" class="hidden px-5 py-2 bg-amber-50 text-amber-700 rounded-xl text-[10px] font-black border border-amber-200 uppercase tracking-widest animate-pulse">
-                <i class="fas fa-lock mr-2"></i> Edit Mode Active
-              </div>
-            </div>
-            <input type="hidden" id="editId">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div class="space-y-3">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-wider">Client Name</label>
-                <input type="text" id="clientName" list="clientSuggestions" oninput="markFormDirty()" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 focus:bg-white outline-none font-bold transition-all">
-              </div>
-              <div class="space-y-3">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-wider">Category</label>
-                <select id="serviceCategory" onchange="markFormDirty(); updateServiceDetailOptions(this.value); document.getElementById('serviceDetail').value='';" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 outline-none font-bold">
-                  <option value="Sales">Sales</option>
-                  <option value="Purchases">Purchases</option>
-                  <option value="Sundry Debtors">Sundry Debtors</option>
-                  <option value="Sundry Creditors">Sundry Creditors</option>
-                  <option value="Payroll Entries">Payroll Entries</option>
-                  <option value="Bank Statement">Bank Statement</option>
-                  <option value="GST Transfer Entries">GST Transfer Entries</option>
-                  <option value="Depreciation Entries">Depreciation Entries</option>
-                  <option value="TDS Entries">TDS Entries</option>
-                  <option value="Miscellaneous Ledgers">Miscellaneous Ledgers</option>
-                  <option value="GST">GST Compliance</option>
-                  <option value="ROC">Corporate Compliance (ROC)</option>
-                  <option value="IT">Income Tax</option>
-                  <option value="PT">Professional Tax</option>
-                  <option value="TDS">TDS Compliance</option>
-                  <option value="DIRECTOR KYC">Director KYC</option>
-                  <option value="UDIN">UDIN/Certification</option>
-                  <option value="FOOD">Food License</option>
-                  <option value="MSME">MSME Certification</option>
-                  <option value="PAYROLL">Payroll</option>
-                  <option value="REPORTS">Reports</option>
-                </select>
-              </div>
-              <div class="space-y-3">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-wider">Service Detail</label>
-                <input type="text" id="serviceDetail" list="serviceSuggestions" oninput="markFormDirty()" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 outline-none font-bold">
-              </div>
-              <div class="space-y-3">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-wider">Assign Staff</label>
-                <input type="text" id="assignedStaff" list="staffSuggestions" oninput="markFormDirty()" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 outline-none font-bold">
-              </div>
-              <div class="space-y-3">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-wider">Alloted By</label>
-                <input type="text" id="allotedBy" list="allotedSuggestions" oninput="markFormDirty()" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 outline-none font-bold">
-              </div>
-              <div class="space-y-3">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-wider">Deadline</label>
-                <input type="date" id="deadline" oninput="markFormDirty()" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 outline-none font-bold">
-              </div>
-              <div class="space-y-3">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-wider">Current Status</label>
-                <select id="status" onchange="markFormDirty()" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 outline-none font-bold">
-                  <option value="Pending">Pending 🚫</option>
-                  <option value="Processing">Processing ⏳</option>
-                  <option value="Completed">Completed 🟢</option>
-                </select>
-              </div>
-              <div class="md:col-span-2 space-y-3">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-wider">Remarks / Notes</label>
-                <input type="text" id="remarks" oninput="markFormDirty()" placeholder="Add specific case notes here..." class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 outline-none font-bold">
+                <button onclick="openQuickAdd()" class="quick-action-btn flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold">
+                  <i class="fas fa-plus text-sm"></i> Quick Action
+                  <i class="fas fa-chevron-down text-xs"></i>
+                </button>
               </div>
             </div>
-            <div class="mt-10 flex gap-5">
-              <button onclick="handleSubmit()" id="submitBtn" class="flex-1 bg-[#1A2E5A] text-white py-6 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-800 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-3">
-                <i class="fas fa-cloud-arrow-up text-xl"></i> Sync To WitcorpDB
+
+            <!-- STAT CARDS -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+              <div onclick="filterByField('status','')" class="stat-card-new cursor-pointer" style="--card-color:#6366f1">
+                <div class="stat-card-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)"><i class="fas fa-users text-white text-lg"></i></div>
+                <div class="stat-card-num" id="statTotal">0</div>
+                <div class="stat-card-label">Total Portfolios</div>
+                <div class="stat-card-sub" id="statTotalSub"></div>
+              </div>
+              <div onclick="filterByField('status','Completed')" class="stat-card-new cursor-pointer" style="--card-color:#10b981">
+                <div class="stat-card-icon" style="background:linear-gradient(135deg,#10b981,#059669)"><i class="fas fa-check-circle text-white text-lg"></i></div>
+                <div class="stat-card-num text-emerald-600" id="statDone">0</div>
+                <div class="stat-card-label">GST Returns Filed</div>
+                <div class="stat-card-sub" id="statDoneSub"></div>
+              </div>
+              <div onclick="filterByField('status','Pending')" class="stat-card-new cursor-pointer" style="--card-color:#f59e0b">
+                <div class="stat-card-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fas fa-clock text-white text-lg"></i></div>
+                <div class="stat-card-num text-amber-600" id="statPending">0</div>
+                <div class="stat-card-label">Pending Tasks</div>
+                <div class="stat-card-sub" id="statPendingSub"></div>
+              </div>
+              <div onclick="filterByField('status','Processing')" class="stat-card-new cursor-pointer" style="--card-color:#3b82f6">
+                <div class="stat-card-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)"><i class="fas fa-calendar-exclamation text-white text-lg"></i></div>
+                <div class="stat-card-num text-blue-600" id="statUpcoming">0</div>
+                <div class="stat-card-label">Upcoming Due</div>
+                <div class="stat-card-sub">Due in next 7 days</div>
+              </div>
+              <div class="stat-card-new cursor-pointer" style="--card-color:#ef4444">
+                <div class="stat-card-icon" style="background:linear-gradient(135deg,#ef4444,#dc2626)"><i class="fas fa-file-check text-white text-lg"></i></div>
+                <div class="stat-card-num text-red-600" id="statToday">0</div>
+                <div class="stat-card-label">Today's Filings</div>
+                <div class="stat-card-sub">Due today</div>
+              </div>
+            </div>
+
+            <!-- MODULES GRID -->
+            <div class="section-card mb-6">
+              <div class="section-card-header flex items-center justify-between mb-4">
+                <h2 class="section-title">All Modules</h2>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div onclick="showSection('clientManagement')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">
+                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f465.svg" class="w-8 h-8" onerror="this.parentElement.innerHTML='<i class=\'fas fa-users text-white text-2xl\'></i>'">
+                  </div>
+                  <div class="module-title">Client Management</div>
+                  <div class="module-desc">Manage all your clients & contacts</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="filterByField('service_category','GST')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#10b981,#059669)">
+                    <i class="fas fa-file-invoice-dollar text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">GST Dashboard</div>
+                  <div class="module-desc">Track & file GST returns</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="filterByField('service_category','ROC')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">
+                    <i class="fas fa-landmark-dome text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">ROC Filings</div>
+                  <div class="module-desc">Company filings & compliance</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="filterByField('service_category','IT')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+                    <i class="fas fa-piggy-bank text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">Income Tax</div>
+                  <div class="module-desc">ITR & Tax Management</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="filterByField('service_category','TDS')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#ef4444,#dc2626)">
+                    <i class="fas fa-file-invoice text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">TDS Returns</div>
+                  <div class="module-desc">Manage TDS filings</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="showSection('dscManagement')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#06b6d4,#0891b2)">
+                    <i class="fas fa-key text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">DSC & eSign</div>
+                  <div class="module-desc">Digital signature services</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="filterByField('service_category','Sales')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">
+                    <i class="fas fa-book text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">Accounting Hub</div>
+                  <div class="module-desc">Accounting & bookkeeping</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="showSection('taskManager')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#f97316,#ea580c)">
+                    <i class="fas fa-tasks text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">Task Manager</div>
+                  <div class="module-desc">Tasks & team collaboration</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="filterByField('service_category','REPORTS')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#ec4899,#db2777)">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">Reports & Insights</div>
+                  <div class="module-desc">Analytics & reports</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+                <div onclick="showSection('vaultManagement')" class="module-card">
+                  <div class="module-icon" style="background:linear-gradient(135deg,#14b8a6,#0d9488)">
+                    <i class="fas fa-shield-halved text-white text-2xl"></i>
+                  </div>
+                  <div class="module-title">Audit & Assurance</div>
+                  <div class="module-desc">Plan & manage audits</div>
+                  <div class="module-arrow"><i class="fas fa-arrow-right text-xs"></i></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- BOTTOM ROW: AI ASSISTANT + UPCOMING DUE + RECENT ACTIVITY -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              <!-- AI Assistant Banner -->
+              <div class="lg:col-span-1 ai-banner-card rounded-2xl p-6 flex flex-col">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="ai-orb"></div>
+                  <div>
+                    <div class="font-black text-white text-lg">Ask Witcorp AI</div>
+                    <span class="ai-badge text-xs font-bold px-2 py-0.5 rounded-full">Powered by AI</span>
+                  </div>
+                </div>
+                <p class="text-blue-100 text-sm mb-4">Search anything, ask questions or get insights about your clients, filings, tasks...</p>
+                <div class="ai-input-wrap flex items-center gap-2 mb-3">
+                  <input type="text" id="aiInput" placeholder="Ask anything... (e.g. Show me pending GST returns)"
+                    class="ai-input flex-1 px-4 py-2.5 rounded-xl text-sm"
+                    onkeydown="if(event.key==='Enter')triggerAI()">
+                  <button onclick="triggerAI()" class="ai-send-btn w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-paper-plane text-sm text-white"></i>
+                  </button>
+                </div>
+                <div id="aiResponse" class="hidden ai-response text-sm text-white/90 rounded-xl p-3 mb-3"></div>
+                <div class="flex flex-wrap gap-2">
+                  <button onclick="setAIQuery('Show pending tasks')" class="ai-quick-btn text-xs">Show pending tasks</button>
+                  <button onclick="setAIQuery('GST due this week')" class="ai-quick-btn text-xs">GST due this week</button>
+                  <button onclick="setAIQuery('Clients with pending filings')" class="ai-quick-btn text-xs">Clients with pending filings</button>
+                  <button onclick="setAIQuery('Help me with TDS')" class="ai-quick-btn text-xs">Help me with TDS</button>
+                </div>
+              </div>
+
+              <!-- Upcoming Due Dates -->
+              <div class="section-card">
+                <div class="section-card-header flex items-center justify-between mb-4">
+                  <h2 class="section-title">Upcoming Due Dates</h2>
+                  <button onclick="filterByField('status','Pending')" class="text-blue-600 text-xs font-bold hover:underline">View All</button>
+                </div>
+                <div id="upcomingDueList" class="space-y-3"></div>
+              </div>
+
+              <!-- Recent Activity -->
+              <div class="section-card">
+                <div class="section-card-header flex items-center justify-between mb-4">
+                  <h2 class="section-title">Recent Activity</h2>
+                  <button onclick="openMyActivity()" class="text-blue-600 text-xs font-bold hover:underline">View All</button>
+                </div>
+                <div id="recentActivityList" class="space-y-3"></div>
+              </div>
+            </div>
+
+            <!-- WORKSPACE OVERVIEW + FILTERS -->
+            <div class="section-card mb-6">
+              <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+                <div class="flex items-center gap-3">
+                  <h2 class="section-title">Workspace Overview</h2>
+                  <div class="live-badge flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span> LIVE SYNC
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <select id="filterStatus" onchange="applyMultiFilter()" class="filter-select px-3 py-2 rounded-xl text-xs font-bold outline-none">
+                    <option value="">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                  <select id="filterCategory" onchange="applyMultiFilter()" class="filter-select px-3 py-2 rounded-xl text-xs font-bold outline-none">
+                    <option value="">All Categories</option>
+                    <option value="GST">GST</option>
+                    <option value="ROC">ROC</option>
+                    <option value="IT">Income Tax</option>
+                    <option value="PT">Professional Tax</option>
+                    <option value="TDS">TDS</option>
+                    <option value="DIRECTOR KYC">Director KYC</option>
+                    <option value="UDIN">UDIN</option>
+                    <option value="FOOD">Food License</option>
+                    <option value="MSME">MSME</option>
+                    <option value="PAYROLL">Payroll</option>
+                    <option value="REPORTS">Reports</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Purchases">Purchases</option>
+                    <option value="Sundry Debtors">Sundry Debtors</option>
+                    <option value="Sundry Creditors">Sundry Creditors</option>
+                    <option value="Payroll Entries">Payroll Entries</option>
+                    <option value="Bank Statement">Bank Statement</option>
+                    <option value="GST Transfer Entries">GST Transfer Entries</option>
+                    <option value="Depreciation Entries">Depreciation Entries</option>
+                    <option value="TDS Entries">TDS Entries</option>
+                    <option value="Miscellaneous Ledgers">Miscellaneous Ledgers</option>
+                  </select>
+                  <button onclick="resetFilters()" class="filter-reset-btn px-3 py-2 rounded-xl text-xs font-bold">
+                    <i class="fas fa-filter-circle-xmark mr-1"></i> Reset
+                  </button>
+                  <button onclick="refreshData()" id="refreshBtn" class="refresh-btn px-4 py-2 rounded-xl text-xs font-bold text-white">
+                    <i class="fas fa-rotate-right mr-1"></i> Refresh
+                  </button>
+                </div>
+              </div>
+
+              <!-- ENTRY FORM -->
+              <div id="entryFormAnchor" class="entry-form rounded-2xl p-6 mb-6">
+                <div class="flex items-center justify-between mb-5">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 form-icon-wrap rounded-xl flex items-center justify-center">
+                      <i class="fas fa-pen-to-square text-blue-600 text-lg"></i>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-800" id="formTitle">Management Portal</h3>
+                  </div>
+                  <div id="editBadge" class="hidden px-4 py-1.5 edit-badge rounded-xl text-[10px] font-black uppercase animate-pulse">
+                    <i class="fas fa-lock mr-1"></i> Edit Mode
+                  </div>
+                </div>
+                <input type="hidden" id="editId">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div class="form-group">
+                    <label class="form-label">Client Name</label>
+                    <input type="text" id="clientName" list="clientSuggestions" oninput="markFormDirty()" class="form-input w-full">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select id="serviceCategory" onchange="markFormDirty();updateServiceDetailOptions(this.value);document.getElementById('serviceDetail').value='';" class="form-input w-full">
+                      <option value="Sales">Sales</option>
+                      <option value="Purchases">Purchases</option>
+                      <option value="Sundry Debtors">Sundry Debtors</option>
+                      <option value="Sundry Creditors">Sundry Creditors</option>
+                      <option value="Payroll Entries">Payroll Entries</option>
+                      <option value="Bank Statement">Bank Statement</option>
+                      <option value="GST Transfer Entries">GST Transfer Entries</option>
+                      <option value="Depreciation Entries">Depreciation Entries</option>
+                      <option value="TDS Entries">TDS Entries</option>
+                      <option value="Miscellaneous Ledgers">Miscellaneous Ledgers</option>
+                      <option value="GST">GST Compliance</option>
+                      <option value="ROC">Corporate Compliance (ROC)</option>
+                      <option value="IT">Income Tax</option>
+                      <option value="PT">Professional Tax</option>
+                      <option value="TDS">TDS Compliance</option>
+                      <option value="DIRECTOR KYC">Director KYC</option>
+                      <option value="UDIN">UDIN/Certification</option>
+                      <option value="FOOD">Food License</option>
+                      <option value="MSME">MSME Certification</option>
+                      <option value="PAYROLL">Payroll</option>
+                      <option value="REPORTS">Reports</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Service Detail</label>
+                    <input type="text" id="serviceDetail" list="serviceSuggestions" oninput="markFormDirty()" class="form-input w-full">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Assign Staff</label>
+                    <input type="text" id="assignedStaff" list="staffSuggestions" oninput="markFormDirty()" class="form-input w-full">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Alloted By</label>
+                    <input type="text" id="allotedBy" list="allotedSuggestions" oninput="markFormDirty()" class="form-input w-full">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Deadline</label>
+                    <input type="date" id="deadline" oninput="markFormDirty()" class="form-input w-full">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select id="status" onchange="markFormDirty()" class="form-input w-full">
+                      <option value="Pending">Pending 🚫</option>
+                      <option value="Processing">Processing ⏳</option>
+                      <option value="Completed">Completed 🟢</option>
+                    </select>
+                  </div>
+                  <div class="form-group sm:col-span-2 lg:col-span-1">
+                    <label class="form-label">Remarks / Notes</label>
+                    <input type="text" id="remarks" oninput="markFormDirty()" placeholder="Add specific case notes..." class="form-input w-full">
+                  </div>
+                </div>
+                <div class="mt-5 flex gap-3">
+                  <button onclick="handleSubmit()" id="submitBtn" class="submit-btn flex-1 py-3.5 rounded-xl font-black text-white flex items-center justify-center gap-2 text-sm">
+                    <i class="fas fa-cloud-arrow-up"></i> Sync To WitcorpDB
+                  </button>
+                  <button onclick="clearForm()" class="cancel-btn px-6 py-3.5 rounded-xl font-bold text-sm">Cancel / Clear</button>
+                </div>
+              </div>
+
+              <!-- BULK ACTION BAR -->
+              <div id="bulkActionBar" class="hidden mb-4 p-4 bulk-bar rounded-xl flex items-center gap-4 flex-wrap">
+                <span id="bulkSelectedCount" class="font-black text-sm text-white">0 selected</span>
+                <select id="bulkStatusSelect" class="px-3 py-2 rounded-xl text-sm font-bold outline-none">
+                  <option value="Pending">Mark Pending</option>
+                  <option value="Processing">Mark Processing</option>
+                  <option value="Completed">Mark Completed</option>
+                </select>
+                <button onclick="applyBulkStatus()" class="px-4 py-2 bg-white text-blue-700 rounded-xl font-black text-sm hover:bg-blue-50">Apply Status</button>
+                <button onclick="clearBulkSelection()" class="ml-auto px-4 py-2 bg-blue-700 text-white rounded-xl font-bold text-sm hover:bg-blue-800">Clear</button>
+              </div>
+
+              <!-- RECORDS TABLE -->
+              <div class="records-table-wrap rounded-xl overflow-hidden">
+                <div class="table-header-row px-4 py-3 flex justify-between items-center">
+                  <h4 class="font-black text-slate-700 text-xs uppercase tracking-wider">Live Records Database</h4>
+                  <span id="recordCountBadge" class="text-xs font-bold text-slate-400"></span>
+                </div>
+                <div id="tableSkeleton" class="p-4 space-y-3">
+                  <div class="skeleton-row h-10 rounded-xl"></div>
+                  <div class="skeleton-row h-10 rounded-xl" style="opacity:.7"></div>
+                  <div class="skeleton-row h-10 rounded-xl" style="opacity:.5"></div>
+                  <div class="skeleton-row h-10 rounded-xl" style="opacity:.3"></div>
+                </div>
+                <div class="scroll-container" id="mainTableWrapper" style="display:none">
+                  <table class="w-full text-left border-collapse min-w-[900px]">
+                    <thead>
+                      <tr>
+                        <th class="table-th p-4"><input type="checkbox" id="mainSelectAllCheckbox" onchange="toggleSelectAll(this)" class="w-4 h-4 rounded"></th>
+                        <th class="table-th p-4 cursor-pointer hover:text-blue-600" onclick="sortTable('client_name')">Client <i class="fas fa-sort ml-1 opacity-40" id="sort_client_name"></i></th>
+                        <th class="table-th p-4 cursor-pointer hover:text-blue-600" onclick="sortTable('updated_at')">Last Update <i class="fas fa-sort ml-1 opacity-40" id="sort_updated_at"></i></th>
+                        <th class="table-th p-4 text-center">Service</th>
+                        <th class="table-th p-4 text-center cursor-pointer hover:text-blue-600" onclick="sortTable('service_category')">Category <i class="fas fa-sort ml-1 opacity-40" id="sort_service_category"></i></th>
+                        <th class="table-th p-4 text-center">Staff</th>
+                        <th class="table-th p-4 text-center">Alloted By</th>
+                        <th class="table-th p-4 text-center cursor-pointer hover:text-blue-600" onclick="sortTable('deadline')">Deadline <i class="fas fa-sort ml-1 opacity-40" id="sort_deadline"></i></th>
+                        <th class="table-th p-4 text-center cursor-pointer hover:text-blue-600" onclick="sortTable('status')">Status <i class="fas fa-sort ml-1 opacity-40" id="sort_status"></i></th>
+                        <th class="table-th p-4">Remarks</th>
+                        <th class="table-th p-4">Updated By</th>
+                        <th class="table-th p-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="mainTableBody" class="divide-y divide-slate-50"></tbody>
+                  </table>
+                  <div class="p-4 text-center">
+                    <button id="loadMoreBtn" onclick="fetchRecords(false)" class="load-more-btn px-6 py-2.5 rounded-xl font-bold text-sm" style="display:none">Load More</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== CLIENT MANAGEMENT ==================== -->
+          <div id="clientManagement" class="section">
+            <div class="flex items-center gap-4 mb-6">
+              <button onclick="showSection('dashboard')" class="back-btn w-10 h-10 rounded-xl flex items-center justify-center">
+                <i class="fas fa-arrow-left text-slate-600"></i>
               </button>
-              <button onclick="clearForm()" class="px-10 bg-slate-100 text-slate-500 rounded-2xl font-bold hover:bg-slate-200 transition-colors">Cancel / Clear</button>
+              <div>
+                <h2 class="text-2xl font-black text-slate-800">Client Directory</h2>
+                <p class="text-slate-500 text-sm">Manage all your clients & contacts</p>
+              </div>
             </div>
-          </div>
-
-          <!-- BULK ACTION BAR -->
-          <div id="bulkActionBar" class="hidden mb-4 p-4 bg-blue-600 text-white rounded-2xl flex items-center gap-4 flex-wrap">
-            <span id="bulkSelectedCount" class="font-black text-sm">0 selected</span>
-            <select id="bulkStatusSelect" class="px-3 py-2 rounded-xl text-sm font-bold text-slate-800 outline-none">
-              <option value="Pending">Mark Pending</option>
-              <option value="Processing">Mark Processing</option>
-              <option value="Completed">Mark Completed</option>
-            </select>
-            <button onclick="applyBulkStatus()" class="px-4 py-2 bg-white text-blue-700 rounded-xl font-black text-sm hover:bg-blue-50">Apply Status</button>
-            <button onclick="clearBulkSelection()" class="ml-auto px-4 py-2 bg-blue-700 rounded-xl font-bold text-sm hover:bg-blue-800">Clear Selection</button>
-          </div>
-
-          <!-- RECORDS TABLE -->
-          <div class="lighting-border bg-white overflow-hidden border border-slate-100 shadow-lg">
-            <div class="p-4 border-b flex justify-between items-center bg-slate-50/30">
-              <h4 class="font-black text-slate-800 uppercase text-xs tracking-[0.2em]">Live Records Database</h4>
-              <span id="recordCountBadge" class="text-xs font-bold text-slate-400"></span>
+            <div class="mb-5 relative max-w-xl">
+              <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="clientSearch" oninput="searchClients(this.value)" placeholder="Search Client Name, Phone or Email..." class="form-input w-full pl-12">
             </div>
-            <div id="tableSkeleton" class="p-6 space-y-3">
-              <div class="skeleton-row h-10 bg-slate-100 rounded-xl animate-pulse"></div>
-              <div class="skeleton-row h-10 bg-slate-100 rounded-xl animate-pulse" style="opacity:0.7"></div>
-              <div class="skeleton-row h-10 bg-slate-100 rounded-xl animate-pulse" style="opacity:0.5"></div>
-              <div class="skeleton-row h-10 bg-slate-100 rounded-xl animate-pulse" style="opacity:0.3"></div>
+            <div class="section-card mb-5">
+              <h3 class="text-base font-black text-slate-700 mb-4">Add / Edit Client</h3>
+              <input type="hidden" id="cEditId">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="form-group"><label class="form-label">Legal Entity Name</label><input type="text" id="cName" placeholder="Company name" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Contact Mobile</label><input type="text" id="cPhone" placeholder="Phone number" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Official Email</label><input type="email" id="cEmail" placeholder="email@company.com" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Entity Type</label>
+                  <select id="cType" class="form-input w-full">
+                    <option value="Pvt Ltd">Private Limited</option>
+                    <option value="LLP">LLP Organization</option>
+                    <option value="Others">Proprietor / Others</option>
+                  </select>
+                </div>
+              </div>
+              <button onclick="saveClient()" id="clientBtn" class="mt-4 submit-btn py-3 px-8 rounded-xl font-black text-white text-sm">Save Client Profile</button>
             </div>
-            <div class="scroll-container" id="mainTableWrapper" style="display:none;">
-              <table class="w-full text-left border-collapse min-w-[900px] text-xs sm:text-sm">
-                <thead>
-                  <tr class="bg-slate-50/50">
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase border-b">
-                      <input type="checkbox" id="mainSelectAllCheckbox" onchange="toggleSelectAll(this)" class="w-4 h-4 rounded">
-                    </th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b tracking-wider cursor-pointer hover:text-blue-600 transition-colors" onclick="sortTable('client_name')">
-                      Client <i class="fas fa-sort ml-1 opacity-40" id="sort_client_name"></i>
-                    </th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b tracking-wider cursor-pointer hover:text-blue-600 transition-colors" onclick="sortTable('updated_at')">
-                      Last Update <i class="fas fa-sort ml-1 opacity-40" id="sort_updated_at"></i>
-                    </th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b text-center tracking-wider">Service</th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b text-center tracking-wider cursor-pointer hover:text-blue-600 transition-colors" onclick="sortTable('service_category')">
-                      Category <i class="fas fa-sort ml-1 opacity-40" id="sort_service_category"></i>
-                    </th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b text-center tracking-wider">Assigned Staff</th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b text-center tracking-wider">Alloted By</th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b text-center tracking-wider cursor-pointer hover:text-blue-600 transition-colors" onclick="sortTable('deadline')">
-                      Deadline <i class="fas fa-sort ml-1 opacity-40" id="sort_deadline"></i>
-                    </th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b text-center tracking-wider cursor-pointer hover:text-blue-600 transition-colors" onclick="sortTable('status')">
-                      Status <i class="fas fa-sort ml-1 opacity-40" id="sort_status"></i>
-                    </th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b tracking-wider">Remarks</th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b tracking-wider">Updated By</th>
-                    <th class="p-4 text-[10px] font-black uppercase border-b text-right tracking-wider">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="mainTableBody" class="divide-y divide-slate-50"></tbody>
-              </table>
-              <div class="p-6 text-center">
-                <button id="loadMoreBtn" onclick="fetchRecords(false)" class="bg-[#1A2E5A] text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-800 transition-all" style="display:none;">Load More</button>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <div class="section-card">
+                <div class="flex items-center gap-2 mb-4">
+                  <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                  <h3 class="font-black text-slate-700 text-sm uppercase">Private Limited <span id="pvtLtdCount" class="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs">0</span></h3>
+                </div>
+                <div id="pvtLtdList" class="space-y-3"></div>
+              </div>
+              <div class="section-card">
+                <div class="flex items-center gap-2 mb-4">
+                  <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+                  <h3 class="font-black text-slate-700 text-sm uppercase">LLP Organization <span id="llpCount" class="ml-1 px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs">0</span></h3>
+                </div>
+                <div id="llpList" class="space-y-3"></div>
+              </div>
+              <div class="section-card">
+                <div class="flex items-center gap-2 mb-4">
+                  <div class="w-3 h-3 rounded-full bg-slate-500"></div>
+                  <h3 class="font-black text-slate-700 text-sm uppercase">Proprietor / Others <span id="othersCount" class="ml-1 px-2 py-0.5 bg-slate-100 text-slate-700 rounded-full text-xs">0</span></h3>
+                </div>
+                <div id="othersList" class="space-y-3"></div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- CLIENT MANAGEMENT SECTION -->
-        <div id="clientManagement" class="section">
-          <h2 class="text-3xl font-black text-slate-800 mb-10 uppercase tracking-tight">Client Directory</h2>
-          <div class="mb-8 relative max-w-xl">
-            <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" id="clientSearch" oninput="searchClients(this.value)" placeholder="Search Client Name, Phone or Email..." class="w-full pl-14 pr-6 py-4 bg-white rounded-2xl shadow-sm border border-slate-200 outline-none focus:border-blue-500 font-bold text-slate-700 transition-all">
-          </div>
-          <div class="lighting-border p-10 shadow-xl mb-12">
-            <input type="hidden" id="cEditId">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <input type="text" id="cName" placeholder="Legal Entity Name" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-blue-500">
-              <input type="text" id="cPhone" placeholder="Contact Mobile" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-blue-500">
-              <input type="email" id="cEmail" placeholder="Official Email ID" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-blue-500">
-              <select id="cType" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-blue-500">
-                <option value="Pvt Ltd">Private Limited</option>
-                <option value="LLP">LLP Organization</option>
-                <option value="Others">Proprietor / Others</option>
-              </select>
-            </div>
-            <button onclick="saveClient()" id="clientBtn" class="mt-6 w-full bg-blue-600 text-white p-5 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-700 transition-all">Save Client Profile</button>
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div class="lighting-border bg-white border border-slate-100 overflow-hidden">
-              <div class="p-6 bg-blue-600 text-white font-black uppercase text-center text-xs tracking-widest flex items-center justify-center gap-2">
-                Private Limited <span id="pvtLtdCount" class="bg-blue-500 px-2 py-0.5 rounded-full text-[10px]">0</span>
+          <!-- ==================== VAULT MANAGEMENT ==================== -->
+          <div id="vaultManagement" class="section">
+            <div class="flex items-center gap-4 mb-6">
+              <button onclick="showSection('dashboard')" class="back-btn w-10 h-10 rounded-xl flex items-center justify-center">
+                <i class="fas fa-arrow-left text-slate-600"></i>
+              </button>
+              <div>
+                <h2 class="text-2xl font-black text-slate-800">Credential Vault</h2>
+                <p class="text-slate-500 text-sm">Securely store client credentials</p>
               </div>
-              <div id="pvtLtdList" class="p-6 space-y-4"></div>
             </div>
-            <div class="lighting-border bg-white border border-slate-100 overflow-hidden">
-              <div class="p-6 bg-purple-600 text-white font-black uppercase text-center text-xs tracking-widest flex items-center justify-center gap-2">
-                LLP Organization <span id="llpCount" class="bg-purple-500 px-2 py-0.5 rounded-full text-[10px]">0</span>
+            <div class="mb-5 relative max-w-xl">
+              <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="vaultSearch" oninput="searchVault(this.value)" placeholder="Search Client, Username or Category..." class="form-input w-full pl-12">
+            </div>
+            <div class="section-card mb-5">
+              <h3 class="text-base font-black text-slate-700 mb-4">Store Credentials</h3>
+              <input type="hidden" id="vEditId">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="form-group"><label class="form-label">Client Name</label><input type="text" id="vClient" placeholder="Select client" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Category</label><input type="text" id="vCat" list="vaultCategorySuggestions" placeholder="System/Portal" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Login ID</label><input type="text" id="vUser" placeholder="Username" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Password</label><input type="text" id="vPass" placeholder="Access password" class="form-input w-full"></div>
               </div>
-              <div id="llpList" class="p-6 space-y-4"></div>
+              <button onclick="saveVault()" id="vaultBtn" class="mt-4 submit-btn py-3 px-8 rounded-xl font-black text-white text-sm">Store Securely</button>
             </div>
-            <div class="lighting-border bg-white border border-slate-100 overflow-hidden">
-              <div class="p-6 bg-slate-700 text-white font-black uppercase text-center text-xs tracking-widest flex items-center justify-center gap-2">
-                Proprietor / Others <span id="othersCount" class="bg-slate-600 px-2 py-0.5 rounded-full text-[10px]">0</span>
+            <div class="section-card overflow-hidden">
+              <div class="scroll-container">
+                <table class="w-full text-left min-w-[900px]">
+                  <thead><tr>
+                    <th class="table-th p-4">Entity</th>
+                    <th class="table-th p-4">Category</th>
+                    <th class="table-th p-4">Username</th>
+                    <th class="table-th p-4">Password</th>
+                    <th class="table-th p-4">Updated By</th>
+                    <th class="table-th p-4 text-right">Actions</th>
+                  </tr></thead>
+                  <tbody id="vaultTableBody" class="divide-y divide-slate-50"></tbody>
+                </table>
               </div>
-              <div id="othersList" class="p-6 space-y-4"></div>
             </div>
           </div>
-        </div>
 
-        <!-- VAULT MANAGEMENT SECTION -->
-        <div id="vaultManagement" class="section">
-          <h2 class="text-3xl font-black text-slate-800 mb-10 uppercase tracking-tight">Credential Vault</h2>
-          <div class="mb-8 relative max-w-xl">
-            <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" id="vaultSearch" oninput="searchVault(this.value)" placeholder="Search Client, Username or Category..." class="w-full pl-14 pr-6 py-4 bg-white rounded-2xl shadow-sm border border-slate-200 outline-none focus:border-blue-500 font-bold text-slate-700 transition-all">
-          </div>
-          <div class="lighting-border p-10 shadow-xl mb-12">
-            <input type="hidden" id="vEditId">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <input type="text" id="vClient" placeholder="Select Client" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
-              <input type="text" id="vCat" list="vaultCategorySuggestions" placeholder="System/Portal Category" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
-              <input type="text" id="vUser" placeholder="Login ID" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
-              <input type="text" id="vPass" placeholder="Access Password" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
+          <!-- ==================== DSC MANAGEMENT ==================== -->
+          <div id="dscManagement" class="section">
+            <div class="flex items-center gap-4 mb-6">
+              <button onclick="showSection('dashboard')" class="back-btn w-10 h-10 rounded-xl flex items-center justify-center">
+                <i class="fas fa-arrow-left text-slate-600"></i>
+              </button>
+              <div>
+                <h2 class="text-2xl font-black text-slate-800">DSC Status</h2>
+                <p class="text-slate-500 text-sm">Digital Signature Certificate tracking</p>
+              </div>
             </div>
-            <button onclick="saveVault()" id="vaultBtn" class="mt-6 w-full bg-yellow-500 text-blue-900 p-5 rounded-2xl font-black uppercase tracking-widest hover:bg-yellow-400 transition-all">Store Securely</button>
-          </div>
-          <div class="lighting-border bg-white border border-slate-100 overflow-hidden">
-            <div class="scroll-container">
-              <table class="w-full text-left min-w-[900px]">
-                <thead class="bg-slate-50/50 border-b">
-                  <tr>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400 tracking-wider">Entity</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400 tracking-wider">Access Category</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400 tracking-wider">Username</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400 tracking-wider">Password</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400 tracking-wider">Updated By</th>
-                    <th class="p-4 text-right font-black text-[10px] uppercase text-slate-400 tracking-wider">Secure Action</th>
-                  </tr>
-                </thead>
-                <tbody id="vaultTableBody" class="divide-y divide-slate-100"></tbody>
-              </table>
+            <div class="mb-5 relative max-w-xl">
+              <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="dscSearch" oninput="searchDSC(this.value)" placeholder="Search Company, Client or Status..." class="form-input w-full pl-12">
+            </div>
+            <div class="section-card mb-5">
+              <h3 class="text-base font-black text-slate-700 mb-4">Add / Edit DSC Record</h3>
+              <input type="hidden" id="dEditId">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="form-group"><label class="form-label">Company Name</label><input type="text" id="dCompany" list="companySuggestions" placeholder="Company name" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Client Name</label><input type="text" id="dClient" placeholder="Client name" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Status</label>
+                  <select id="dStatus" class="form-input w-full">
+                    <option value="Valid">Valid</option>
+                    <option value="Expired">Expired</option>
+                    <option value="No DSC">No DSC</option>
+                  </select>
+                </div>
+                <div class="form-group"><label class="form-label">Expiry Date</label><input type="date" id="dExpiry" class="form-input w-full"></div>
+                <div class="form-group"><label class="form-label">Remarks</label><input type="text" id="dRemarks" placeholder="Remarks" class="form-input w-full"></div>
+              </div>
+              <button onclick="saveDSC()" id="dscBtn" class="mt-4 submit-btn py-3 px-8 rounded-xl font-black text-white text-sm">Save DSC Status</button>
+            </div>
+            <div class="section-card overflow-hidden">
+              <div class="scroll-container">
+                <table class="w-full text-left min-w-[1000px]">
+                  <thead><tr>
+                    <th class="table-th p-4">Company</th>
+                    <th class="table-th p-4">Client</th>
+                    <th class="table-th p-4">Status</th>
+                    <th class="table-th p-4">Expiry</th>
+                    <th class="table-th p-4">Remarks</th>
+                    <th class="table-th p-4">Updated By</th>
+                    <th class="table-th p-4">Updated At</th>
+                    <th class="table-th p-4 text-right">Actions</th>
+                  </tr></thead>
+                  <tbody id="dscTableBody" class="divide-y divide-slate-50"></tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- DSC MANAGEMENT SECTION -->
-        <div id="dscManagement" class="section">
-          <h2 class="text-3xl font-black text-slate-800 mb-10 uppercase tracking-tight">DSC Status</h2>
-          <div class="mb-8 relative max-w-xl">
-            <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" id="dscSearch" oninput="searchDSC(this.value)" placeholder="Search Company, Client or Status..." class="w-full pl-14 pr-6 py-4 bg-white rounded-2xl shadow-sm border border-slate-200 outline-none focus:border-blue-500 font-bold text-slate-700 transition-all">
-          </div>
-          <div class="lighting-border p-10 shadow-xl mb-12">
-            <input type="hidden" id="dEditId">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-              <input type="text" id="dCompany" list="companySuggestions" placeholder="Company Name" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
-              <input type="text" id="dClient" placeholder="Client Name" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
-              <select id="dStatus" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
-                <option value="Valid">Valid</option>
-                <option value="Expired">Expired</option>
-                <option value="No DSC">No DSC</option>
-              </select>
-              <input type="date" id="dExpiry" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
-              <input type="text" id="dRemarks" placeholder="Remarks" class="p-5 bg-slate-50 rounded-2xl border-2 border-slate-100 font-bold">
+          <!-- ==================== FILTER VIEW ==================== -->
+          <div id="filterView" class="section">
+            <div class="flex items-center gap-4 mb-6">
+              <button onclick="showSection('dashboard')" class="back-btn w-10 h-10 rounded-xl flex items-center justify-center">
+                <i class="fas fa-arrow-left text-slate-600"></i>
+              </button>
+              <div>
+                <h2 id="filterTitle" class="text-2xl font-black text-slate-800">Records Filtered</h2>
+              </div>
             </div>
-            <button onclick="saveDSC()" id="dscBtn" class="mt-6 w-full bg-cyan-600 text-white p-5 rounded-2xl font-black uppercase tracking-widest hover:bg-cyan-700 transition-all">Save DSC Status</button>
-          </div>
-          <div class="lighting-border bg-white border border-slate-100 overflow-hidden">
-            <div class="scroll-container">
-              <table class="w-full text-left min-w-[1200px]">
-                <thead class="bg-slate-50/50 border-b">
-                  <tr>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400">Company</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400">Client</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400">Status</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400">Expiry</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400">Remarks</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400">Updated By</th>
-                    <th class="p-4 font-black text-[10px] uppercase text-slate-400">Updated At</th>
-                    <th class="p-4 text-right font-black text-[10px] uppercase text-slate-400">Action</th>
-                  </tr>
-                </thead>
-                <tbody id="dscTableBody" class="divide-y divide-slate-100"></tbody>
-              </table>
+            <div class="section-card overflow-hidden">
+              <div class="scroll-container">
+                <table class="w-full text-left border-collapse min-w-[1200px]">
+                  <thead><tr>
+                    <th class="table-th p-4"><input type="checkbox" id="filterSelectAllCheckbox" onchange="toggleSelectAll(this)" class="w-4 h-4 rounded"></th>
+                    <th class="table-th p-4">Client</th>
+                    <th class="table-th p-4">Update Info</th>
+                    <th class="table-th p-4 text-center">Service</th>
+                    <th class="table-th p-4 text-center">Category</th>
+                    <th class="table-th p-4 text-center">Staff</th>
+                    <th class="table-th p-4 text-center">Alloted By</th>
+                    <th class="table-th p-4 text-center">Deadline</th>
+                    <th class="table-th p-4 text-center">Status</th>
+                    <th class="table-th p-4">Notes</th>
+                    <th class="table-th p-4">Updated By</th>
+                    <th class="table-th p-4 text-right">Manage</th>
+                  </tr></thead>
+                  <tbody id="filterTableBody" class="divide-y divide-slate-50"></tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- FILTER VIEW SECTION -->
-        <div id="filterView" class="section">
-          <div class="flex items-center gap-6 mb-12">
-            <button onclick="showSection('dashboard')" class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shadow-md text-slate-400 hover:text-blue-600 transition-all transform hover:-translate-x-1">
-              <i class="fas fa-arrow-left text-xl"></i>
-            </button>
-            <h2 id="filterTitle" class="text-3xl font-black text-slate-800 uppercase">Records Filtered</h2>
-          </div>
-          <div class="lighting-border bg-white shadow-xl overflow-hidden border" id="filterTableContainer">
-            <div class="scroll-container">
-              <table class="w-full text-left border-collapse min-w-[1200px]">
-                <thead class="bg-slate-50/50">
-                  <tr>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase border-b">
-                      <input type="checkbox" id="filterSelectAllCheckbox" onchange="toggleSelectAll(this)" class="w-4 h-4 rounded">
-                    </th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Client</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Update Info</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase text-center tracking-widest">Service Desk</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase text-center tracking-widest">Category</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase text-center tracking-widest">Assigned Staff</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase text-center tracking-widest">Alloted By</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase text-center tracking-widest">Deadline</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase text-center tracking-widest">Status</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Notes</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Updated By</th>
-                    <th class="p-4 text-[10px] font-black text-slate-400 uppercase text-right tracking-widest">Manage</th>
-                  </tr>
-                </thead>
-                <tbody id="filterTableBody" class="divide-y divide-slate-50"></tbody>
-              </table>
+          <!-- ==================== TASK MANAGER ==================== -->
+          <div id="taskManager" class="section">
+            <div class="flex items-center gap-4 mb-6">
+              <button onclick="showSection('dashboard')" class="back-btn w-10 h-10 rounded-xl flex items-center justify-center">
+                <i class="fas fa-arrow-left text-slate-600"></i>
+              </button>
+              <div>
+                <h2 class="text-2xl font-black text-slate-800">Task Manager</h2>
+                <p class="text-slate-500 text-sm">Track tasks & team collaboration</p>
+              </div>
+            </div>
+            <div class="section-card text-center py-12">
+              <i class="fas fa-tasks text-5xl text-slate-200 mb-4"></i>
+              <p class="font-black text-slate-400 uppercase text-sm">Task Manager</p>
+              <p class="text-slate-400 text-xs mt-1">Use the main dashboard to manage all tasks via records</p>
+              <button onclick="showSection('dashboard')" class="mt-4 submit-btn py-2.5 px-6 rounded-xl font-bold text-white text-sm">Go to Dashboard</button>
             </div>
           </div>
-        </div>
 
+        </div><!-- end page content -->
       </main>
     </div>
   </div>
 
   <!-- QUICK ADD FLOATING BUTTON -->
-  <button onclick="openQuickAdd()"
-    class="fixed bottom-24 right-6 z-[9999] w-14 h-14 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:bg-blue-700 hover:scale-110 transition-all lg:bottom-8"
-    title="Quick Add (Ctrl+N)">
-    <i class="fas fa-plus text-xl"></i>
+  <button onclick="openQuickAdd()" class="fixed bottom-6 right-6 z-[9999] fab-btn w-14 h-14 rounded-full shadow-2xl flex items-center justify-center lg:bottom-8" title="Quick Add (Ctrl+N)">
+    <i class="fas fa-plus text-xl text-white"></i>
   </button>
 
   <!-- THEME SETTINGS MODAL -->
   <div id="themeModal" class="hidden fixed inset-0 bg-black/50 z-[99999] flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden">
+    <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden">
       <div class="flex items-center justify-between p-6 border-b">
-        <h2 class="text-2xl font-black text-slate-800">Background Themes</h2>
+        <h2 class="text-2xl font-black text-slate-800">Theme Settings</h2>
         <button onclick="closeThemeSettings()" class="text-3xl text-slate-400 hover:text-red-500">&times;</button>
       </div>
-      <div class="p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 max-h-[80vh] overflow-y-auto">
-        <div onclick="changeTheme('theme-ocean')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-cyan-500 to-blue-700"></div>
-          <div class="p-3 font-bold text-center">Ocean Blue</div>
+      <div class="p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-h-[75vh] overflow-y-auto">
+        <div onclick="changeTheme('theme-default')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-blue-400 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-r from-slate-100 to-white"></div>
+          <div class="p-3 font-bold text-center text-sm">Default Light</div>
         </div>
-        <div onclick="changeTheme('theme-dark')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-slate-900 to-slate-700"></div>
-          <div class="p-3 font-bold text-center">Dark Mode</div>
+        <div onclick="changeTheme('theme-ocean')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-blue-400 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-r from-cyan-500 to-blue-700"></div>
+          <div class="p-3 font-bold text-center text-sm">Ocean Blue</div>
         </div>
-        <div onclick="changeTheme('theme-green')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-emerald-500 to-teal-700"></div>
-          <div class="p-3 font-bold text-center">Green Nature</div>
+        <div onclick="changeTheme('theme-dark')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-slate-600 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-r from-slate-900 to-slate-700"></div>
+          <div class="p-3 font-bold text-center text-sm">Dark Mode</div>
         </div>
-        <div onclick="changeTheme('theme-purple')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-fuchsia-500 to-purple-700"></div>
-          <div class="p-3 font-bold text-center">Purple Dream</div>
+        <div onclick="changeTheme('theme-green')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-emerald-400 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-r from-emerald-500 to-teal-700"></div>
+          <div class="p-3 font-bold text-center text-sm">Green Nature</div>
         </div>
-        <div onclick="changeTheme('theme-light')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-slate-100 to-white"></div>
-          <div class="p-3 font-bold text-center">Light Mode</div>
+        <div onclick="changeTheme('theme-purple')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-purple-400 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-r from-fuchsia-500 to-purple-700"></div>
+          <div class="p-3 font-bold text-center text-sm">Purple Dream</div>
         </div>
-        <div class="col-span-full mt-8 mb-2">
-          <h3 class="text-xl font-black text-slate-700">Sidebar Themes</h3>
+        <div class="col-span-full mt-4 mb-2">
+          <h3 class="text-lg font-black text-slate-700">Sidebar Themes</h3>
         </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-raspberry')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-pink-300 to-pink-500"></div>
-          <div class="p-3 font-bold text-center">Raspberry Beret</div>
+        <div onclick="changeSidebarTheme('sidebar-theme-default')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-blue-400 hover:scale-105 transition-all">
+          <div class="h-24" style="background:linear-gradient(180deg,#0f172a,#1e2d5a)"></div>
+          <div class="p-3 font-bold text-center text-sm">Default Navy</div>
         </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-chill')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-emerald-700 to-cyan-700"></div>
-          <div class="p-3 font-bold text-center">Chill Vibes</div>
+        <div onclick="changeSidebarTheme('sidebar-theme-chill')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-teal-400 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-b from-emerald-700 to-cyan-700"></div>
+          <div class="p-3 font-bold text-center text-sm">Chill Vibes</div>
         </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-damini')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-pink-300 to-sky-400"></div>
-          <div class="p-3 font-bold text-center">Damini</div>
+        <div onclick="changeSidebarTheme('sidebar-theme-dark')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-slate-400 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-b from-slate-900 to-slate-700"></div>
+          <div class="p-3 font-bold text-center text-sm">Dark Sidebar</div>
         </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-forest')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-lime-700 to-amber-900"></div>
-          <div class="p-3 font-bold text-center">Forest Floor</div>
+        <div onclick="changeSidebarTheme('sidebar-theme-raspberry')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-pink-400 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-b from-pink-500 to-rose-600"></div>
+          <div class="p-3 font-bold text-center text-sm">Raspberry</div>
         </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-mint')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-lime-300 to-blue-400"></div>
-          <div class="p-3 font-bold text-center">Mint Chip</div>
+        <div onclick="changeSidebarTheme('sidebar-theme-forest')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-lime-400 hover:scale-105 transition-all">
+          <div class="h-24 bg-gradient-to-b from-lime-700 to-amber-900"></div>
+          <div class="p-3 font-bold text-center text-sm">Forest Floor</div>
         </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-seaglass')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-cyan-200 to-fuchsia-300"></div>
-          <div class="p-3 font-bold text-center">Sea Glass</div>
-        </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-lemon')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-yellow-400 to-green-700"></div>
-          <div class="p-3 font-bold text-center">Lemon Lime</div>
-        </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-dark')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28 bg-gradient-to-r from-slate-900 to-slate-700"></div>
-          <div class="p-3 font-bold text-center">Dark Sidebar</div>
-        </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-navypro')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28" style="background:linear-gradient(180deg,#1f376d 0%,#1a2f5f 35%,#172a55 70%,#14244b 100%);"></div>
-          <div class="p-3 font-bold text-center">Navy Pro</div>
-        </div>
-        <div onclick="changeSidebarTheme('sidebar-theme-original')" class="cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-105 transition-all">
-          <div class="h-28" style="background:linear-gradient(180deg,#0f172a 0%,#14213d 45%,#1e3a8a 100%);"></div>
-          <div class="p-3 font-bold text-center">Original Blue</div>
+        <div onclick="changeSidebarTheme('sidebar-theme-navypro')" class="cursor-pointer rounded-2xl overflow-hidden border-4 border-transparent hover:border-blue-400 hover:scale-105 transition-all">
+          <div class="h-24" style="background:linear-gradient(180deg,#1f376d,#14244b)"></div>
+          <div class="p-3 font-bold text-center text-sm">Navy Pro</div>
         </div>
       </div>
     </div>
@@ -833,18 +1060,15 @@
 
   <!-- FONT SIZE MODAL -->
   <div id="fontSizeModal" class="hidden fixed inset-0 bg-black/50 z-[99999] flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden">
+    <div class="bg-white w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden">
       <div class="flex items-center justify-between p-6 border-b">
         <h2 class="text-xl font-black text-slate-800">Font Size</h2>
         <button onclick="document.getElementById('fontSizeModal').classList.add('hidden')" class="text-3xl text-slate-400 hover:text-red-500">&times;</button>
       </div>
       <div class="p-6 flex flex-col gap-3">
-        <button onclick="setFontSize('small'); document.getElementById('fontSizeModal').classList.add('hidden');" id="font-small-dd"
-          class="w-full py-3 rounded-2xl border-2 font-black text-sm transition-all" style="border-color:#e2e8f0; color:#64748b;">Small</button>
-        <button onclick="setFontSize('medium'); document.getElementById('fontSizeModal').classList.add('hidden');" id="font-medium-dd"
-          class="w-full py-3 rounded-2xl border-2 font-black text-sm transition-all" style="border-color:#e2e8f0; color:#64748b;">Medium</button>
-        <button onclick="setFontSize('large'); document.getElementById('fontSizeModal').classList.add('hidden');" id="font-large-dd"
-          class="w-full py-3 rounded-2xl border-2 font-black text-sm transition-all" style="border-color:#e2e8f0; color:#64748b;">Large</button>
+        <button onclick="setFontSize('small');document.getElementById('fontSizeModal').classList.add('hidden');" id="font-small-dd" class="w-full py-3 rounded-2xl border-2 font-black text-sm transition-all">Small</button>
+        <button onclick="setFontSize('medium');document.getElementById('fontSizeModal').classList.add('hidden');" id="font-medium-dd" class="w-full py-3 rounded-2xl border-2 font-black text-sm transition-all">Medium</button>
+        <button onclick="setFontSize('large');document.getElementById('fontSizeModal').classList.add('hidden');" id="font-large-dd" class="w-full py-3 rounded-2xl border-2 font-black text-sm transition-all">Large</button>
       </div>
     </div>
   </div>
@@ -852,23 +1076,17 @@
   <!-- ACTIVITY MODAL -->
   <div id="activityModal" class="hidden fixed inset-0 bg-black/50 z-[99999] flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-3xl rounded-3xl overflow-hidden">
-      <div class="p-5 border-b flex justify-between">
-        <h2 class="text-2xl font-black">My Activity</h2>
-        <button onclick="closeActivityModal()">✕</button>
-      </div>
+      <div class="p-5 border-b flex justify-between"><h2 class="text-2xl font-black">My Activity</h2><button onclick="closeActivityModal()">✕</button></div>
       <div id="activityList" class="p-5 max-h-[500px] overflow-y-auto"></div>
     </div>
   </div>
 
   <!-- EXPORT MODAL -->
   <div id="exportModal" class="hidden fixed inset-0 bg-black/50 z-[99999] flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden">
-      <div class="p-5 border-b flex justify-between">
-        <h2 class="text-xl font-black">Export Records</h2>
-        <button onclick="closeExportModal()">✕</button>
-      </div>
+    <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden">
+      <div class="p-5 border-b flex justify-between"><h2 class="text-xl font-black">Export Records</h2><button onclick="closeExportModal()">✕</button></div>
       <div class="p-6 space-y-3">
-        <button onclick="exportExcel()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">📊 Export Excel</button>
+        <button onclick="exportExcel()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold">📊 Export Excel</button>
         <button onclick="exportPDF()" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold">📄 Export PDF</button>
         <button onclick="exportCSV()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">📁 Export CSV</button>
       </div>
@@ -878,132 +1096,91 @@
   <!-- PROFILE MODAL -->
   <div id="profileModal" class="hidden fixed inset-0 z-[99999] bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-      <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <div class="p-6 border-b flex items-center justify-between">
         <h2 class="text-xl font-black text-slate-800">My Profile</h2>
         <button onclick="closeProfileModal()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-lg">✕</button>
       </div>
       <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg" style="background:#3b82f6">
+        <div class="w-16 h-16 rounded-2xl avatar-circle flex items-center justify-center text-white text-2xl font-black shadow-lg">
           <span id="profileInitialModal">U</span>
         </div>
         <div>
           <div id="profileDisplayName" class="text-lg font-black text-slate-800">Loading...</div>
           <div id="profileDesignation" class="text-sm text-slate-500 font-semibold">Team Member</div>
-          <span id="profileRoleBadge" class="px-2 py-0.5 rounded-full text-xs font-black bg-blue-100 text-blue-700 mt-1 inline-block">STAFF</span>
+          <span id="profileRoleBadgeModal" class="px-2 py-0.5 rounded-full text-xs font-black bg-blue-100 text-blue-700 mt-1 inline-block">STAFF</span>
         </div>
       </div>
-      <div class="grid grid-cols-3 gap-4 p-6 border-b border-slate-100">
-        <div class="text-center p-3 bg-emerald-50 rounded-2xl">
-          <div id="pStatsAdded" class="text-2xl font-black text-emerald-600">0</div>
-          <div class="text-xs font-bold text-slate-500 mt-1">Added</div>
-        </div>
-        <div class="text-center p-3 bg-blue-50 rounded-2xl">
-          <div id="pStatsUpdated" class="text-2xl font-black text-blue-600">0</div>
-          <div class="text-xs font-bold text-slate-500 mt-1">Updated</div>
-        </div>
-        <div class="text-center p-3 bg-rose-50 rounded-2xl">
-          <div id="pStatsDeleted" class="text-2xl font-black text-rose-600">0</div>
-          <div class="text-xs font-bold text-slate-500 mt-1">Deleted</div>
-        </div>
+      <div class="grid grid-cols-3 gap-4 p-6 border-b">
+        <div class="text-center p-3 bg-emerald-50 rounded-2xl"><div id="pStatsAdded" class="text-2xl font-black text-emerald-600">0</div><div class="text-xs font-bold text-slate-500 mt-1">Added</div></div>
+        <div class="text-center p-3 bg-blue-50 rounded-2xl"><div id="pStatsUpdated" class="text-2xl font-black text-blue-600">0</div><div class="text-xs font-bold text-slate-500 mt-1">Updated</div></div>
+        <div class="text-center p-3 bg-rose-50 rounded-2xl"><div id="pStatsDeleted" class="text-2xl font-black text-rose-600">0</div><div class="text-xs font-bold text-slate-500 mt-1">Deleted</div></div>
       </div>
       <div class="p-6 space-y-4">
-        <div>
-          <label class="text-xs font-black text-slate-500 uppercase mb-1 block">Full Name</label>
-          <input id="pFullName" type="text" placeholder="Your full name" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        </div>
-        <div>
-          <label class="text-xs font-black text-slate-500 uppercase mb-1 block">Designation</label>
-          <input id="pDesignation" type="text" placeholder="e.g. Senior Accountant" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        </div>
-        <div>
-          <label class="text-xs font-black text-slate-500 uppercase mb-1 block">Phone</label>
-          <input id="pPhone" type="text" placeholder="Phone number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        </div>
-        <div>
-          <label class="text-xs font-black text-slate-500 uppercase mb-1 block">Department</label>
-          <input id="pDepartment" type="text" placeholder="e.g. GST Team" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        </div>
-        <div>
-          <label class="text-xs font-black text-slate-500 uppercase mb-1 block">Default Category Filter</label>
-          <select id="pDefaultCategory" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
+        <div class="form-group"><label class="form-label">Full Name</label><input id="pFullName" type="text" placeholder="Your full name" class="form-input w-full"></div>
+        <div class="form-group"><label class="form-label">Designation</label><input id="pDesignation" type="text" placeholder="e.g. Senior Accountant" class="form-input w-full"></div>
+        <div class="form-group"><label class="form-label">Phone</label><input id="pPhone" type="text" placeholder="Phone number" class="form-input w-full"></div>
+        <div class="form-group"><label class="form-label">Department</label><input id="pDepartment" type="text" placeholder="e.g. GST Team" class="form-input w-full"></div>
+        <div class="form-group"><label class="form-label">Default Category Filter</label>
+          <select id="pDefaultCategory" class="form-input w-full">
             <option value="">None</option>
-            <option value="GST">GST</option>
-            <option value="ROC">ROC</option>
-            <option value="IT">Income Tax</option>
-            <option value="TDS">TDS</option>
-            <option value="PT">Professional Tax</option>
-            <option value="PAYROLL">Payroll</option>
-            <option value="REPORTS">Reports</option>
+            <option value="GST">GST</option><option value="ROC">ROC</option><option value="IT">Income Tax</option>
+            <option value="TDS">TDS</option><option value="PT">Professional Tax</option>
+            <option value="PAYROLL">Payroll</option><option value="REPORTS">Reports</option>
           </select>
         </div>
-        <div>
-          <label class="text-xs font-black text-slate-500 uppercase mb-1 block">Default Status Filter</label>
-          <select id="pDefaultStatus" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-            <option value="">None</option>
-            <option value="Pending">Pending</option>
-            <option value="Processing">Processing</option>
-            <option value="Completed">Completed</option>
+        <div class="form-group"><label class="form-label">Default Status Filter</label>
+          <select id="pDefaultStatus" class="form-input w-full">
+            <option value="">None</option><option value="Pending">Pending</option>
+            <option value="Processing">Processing</option><option value="Completed">Completed</option>
           </select>
         </div>
       </div>
-      <div class="p-6 flex gap-3 border-t border-slate-100 mt-2">
-        <button onclick="saveProfileChanges()" class="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all">
-          <i class="fas fa-save mr-2"></i>Save Changes
-        </button>
+      <div class="p-6 flex gap-3 border-t">
+        <button onclick="saveProfileChanges()" class="flex-1 submit-btn py-3 rounded-2xl font-black text-sm text-white"><i class="fas fa-save mr-2"></i>Save Changes</button>
         <button onclick="closeProfileModal()" class="px-6 py-3 bg-slate-100 text-slate-700 rounded-2xl font-black text-sm hover:bg-slate-200 transition-all">Cancel</button>
       </div>
     </div>
   </div>
 
-  <!-- AUDIT TRAIL MODAL -->
+  <!-- AUDIT MODAL -->
   <div id="auditModal" class="hidden fixed inset-0 z-[99999] bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto">
-      <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <div class="p-6 border-b flex items-center justify-between">
         <h2 id="auditModalTitle" class="text-xl font-black text-slate-800">Change History</h2>
         <button onclick="closeAuditModal()" class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-lg">✕</button>
       </div>
-      <div id="auditList" class="divide-y divide-slate-100">
-        <div class="p-10 text-center text-slate-400 font-semibold">Loading...</div>
-      </div>
+      <div id="auditList" class="divide-y divide-slate-100"><div class="p-10 text-center text-slate-400 font-semibold">Loading...</div></div>
     </div>
   </div>
 
   <!-- COMMENTS MODAL -->
   <div id="commentsModal" class="hidden fixed inset-0 z-[99999] bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg flex flex-col" style="max-height:85vh">
-      <div class="p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+      <div class="p-5 border-b flex items-center justify-between flex-shrink-0">
         <h2 id="commentsModalTitle" class="text-lg font-black text-slate-800">Comments</h2>
         <button onclick="closeCommentsModal()" class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-lg">✕</button>
       </div>
-      <div id="commentsList" class="flex-1 overflow-y-auto p-5 space-y-4 min-h-0">
-        <div class="text-center text-slate-400 py-8 font-semibold">Loading...</div>
-      </div>
-      <div class="p-4 border-t border-slate-100 flex gap-3 flex-shrink-0">
-        <input id="commentInput" type="text" placeholder="Type a comment... (Enter to send)"
-          class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        <button id="postCommentBtn" onclick="postComment()" class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-all flex-shrink-0">
+      <div id="commentsList" class="flex-1 overflow-y-auto p-5 space-y-4 min-h-0"><div class="text-center text-slate-400 py-8 font-semibold">Loading...</div></div>
+      <div class="p-4 border-t flex gap-3 flex-shrink-0">
+        <input id="commentInput" type="text" placeholder="Type a comment... (Enter to send)" class="form-input flex-1">
+        <button id="postCommentBtn" onclick="postComment()" class="w-12 h-12 rounded-2xl submit-btn flex items-center justify-center flex-shrink-0 text-white">
           <i class="fas fa-paper-plane"></i>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- SUBTASKS / CHECKLIST MODAL -->
+  <!-- SUBTASKS MODAL -->
   <div id="subtasksModal" class="hidden fixed inset-0 z-[99999] bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-y-auto">
-      <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <div class="p-5 border-b flex items-center justify-between">
         <h2 id="subtasksModalTitle" class="text-lg font-black text-slate-800">Checklist</h2>
         <button onclick="closeSubtasksModal()" class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-lg">✕</button>
       </div>
-      <div id="subtasksList" class="p-4">
-        <div class="text-center text-slate-400 py-6 font-semibold">Loading...</div>
-      </div>
-      <div class="p-4 border-t border-slate-100 flex gap-3">
-        <input id="subtaskInput" type="text" placeholder="Add new task..."
-          class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        <button onclick="addSubtask()" class="px-5 py-3 rounded-2xl bg-emerald-500 text-white font-black text-sm hover:bg-emerald-600 transition-all">
-          <i class="fas fa-plus"></i>
-        </button>
+      <div id="subtasksList" class="p-4"><div class="text-center text-slate-400 py-6 font-semibold">Loading...</div></div>
+      <div class="p-4 border-t flex gap-3">
+        <input id="subtaskInput" type="text" placeholder="Add new task..." class="form-input flex-1">
+        <button onclick="addSubtask()" class="px-5 py-3 rounded-2xl bg-emerald-500 text-white font-black text-sm hover:bg-emerald-600"><i class="fas fa-plus"></i></button>
       </div>
     </div>
   </div>
@@ -1011,7 +1188,7 @@
   <!-- QUICK ADD MODAL -->
   <div id="quickAddModal" class="hidden fixed inset-0 z-[99999] bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md">
-      <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <div class="p-5 border-b flex items-center justify-between">
         <div>
           <h2 class="text-lg font-black text-slate-800">Quick Add Record</h2>
           <p class="text-xs text-slate-400 font-semibold mt-0.5"><kbd class="px-1.5 py-0.5 bg-slate-100 rounded text-[10px] font-black">Ctrl+N</kbd></p>
@@ -1019,43 +1196,57 @@
         <button onclick="closeQuickAdd()" class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-lg">✕</button>
       </div>
       <div class="p-5 space-y-4">
-        <input id="qaClientName" list="clientSuggestions" type="text" placeholder="Client Name *"
-          class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        <select id="qaCategory" onchange="updateQAServiceOptions(this.value); document.getElementById('qaServiceDetail').value='';"
-          class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-          <option value="GST">GST</option>
-          <option value="ROC">ROC</option>
-          <option value="IT">Income Tax</option>
-          <option value="TDS">TDS</option>
-          <option value="PT">Professional Tax</option>
-          <option value="PAYROLL">Payroll</option>
-          <option value="REPORTS">Reports</option>
-          <option value="Sales">Sales</option>
-          <option value="Purchases">Purchases</option>
-        </select>
-        <input id="qaServiceDetail" list="serviceSuggestions" type="text" placeholder="Service Detail"
-          class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        <input id="qaStaff" list="staffSuggestions" type="text" placeholder="Assigned Staff"
-          class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        <input id="qaDeadline" type="date"
-          class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-        <select id="qaStatus"
-          class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-blue-400">
-          <option value="Pending">Pending</option>
-          <option value="Processing">Processing</option>
-          <option value="Completed">Completed</option>
-        </select>
+        <div class="form-group"><label class="form-label">Client Name *</label><input id="qaClientName" list="clientSuggestions" type="text" placeholder="Client name" class="form-input w-full"></div>
+        <div class="form-group"><label class="form-label">Category</label>
+          <select id="qaCategory" onchange="updateQAServiceOptions(this.value);document.getElementById('qaServiceDetail').value='';" class="form-input w-full">
+            <option value="GST">GST</option><option value="ROC">ROC</option><option value="IT">Income Tax</option>
+            <option value="TDS">TDS</option><option value="PT">Professional Tax</option>
+            <option value="PAYROLL">Payroll</option><option value="REPORTS">Reports</option>
+            <option value="Sales">Sales</option><option value="Purchases">Purchases</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Service Detail</label><input id="qaServiceDetail" list="serviceSuggestions" type="text" placeholder="Service detail" class="form-input w-full"></div>
+        <div class="form-group"><label class="form-label">Assigned Staff</label><input id="qaStaff" list="staffSuggestions" type="text" placeholder="Staff name" class="form-input w-full"></div>
+        <div class="form-group"><label class="form-label">Deadline</label><input id="qaDeadline" type="date" class="form-input w-full"></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select id="qaStatus" class="form-input w-full">
+            <option value="Pending">Pending</option><option value="Processing">Processing</option><option value="Completed">Completed</option>
+          </select>
+        </div>
       </div>
-      <div class="p-5 flex gap-3 border-t border-slate-100">
-        <button onclick="submitQuickAdd()" class="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all">
-          <i class="fas fa-bolt mr-2"></i>Add Record
-        </button>
-        <button onclick="closeQuickAdd()" class="px-6 py-3 bg-slate-100 text-slate-700 rounded-2xl font-black text-sm hover:bg-slate-200 transition-all">Cancel</button>
+      <div class="p-5 flex gap-3 border-t">
+        <button onclick="submitQuickAdd()" class="flex-1 submit-btn py-3 rounded-2xl font-black text-sm text-white"><i class="fas fa-bolt mr-2"></i>Add Record</button>
+        <button onclick="closeQuickAdd()" class="px-6 py-3 bg-slate-100 text-slate-700 rounded-2xl font-black text-sm hover:bg-slate-200">Cancel</button>
       </div>
     </div>
   </div>
 
-  <!-- GLOBAL AUTOCOMPLETE LISTS -->
+  <!-- AI ASSISTANT MODAL -->
+  <div id="aiModal" class="hidden fixed inset-0 z-[99999] bg-black/50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col">
+      <div class="ai-modal-header p-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="ai-orb-sm"></div>
+          <div>
+            <h2 class="text-lg font-black text-white">Witcorp AI Assistant</h2>
+            <p class="text-blue-200 text-xs">Ask anything about your workspace</p>
+          </div>
+        </div>
+        <button onclick="closeAIAssistant()" class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white font-black hover:bg-white/30">✕</button>
+      </div>
+      <div id="aiChatHistory" class="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50 min-h-0"></div>
+      <div class="p-4 border-t bg-white flex gap-3">
+        <input id="aiModalInput" type="text" placeholder="Ask anything..."
+          class="form-input flex-1"
+          onkeydown="if(event.key==='Enter')submitAIModal()">
+        <button onclick="submitAIModal()" class="submit-btn w-12 h-12 rounded-xl flex items-center justify-center text-white flex-shrink-0">
+          <i class="fas fa-paper-plane text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL AUTOCOMPLETE -->
   <datalist id="clientSuggestions"></datalist>
   <datalist id="serviceSuggestions"></datalist>
   <datalist id="staffSuggestions"></datalist>
@@ -1066,7 +1257,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-  <script src="script.js?v=6.1"></script>
+  <script src="script.js?v=7.0"></script>
   <link rel="stylesheet" href="witcorp_premium_patch.css">
   <script src="witcorp_premium_patch.js"></script>
 </body>
